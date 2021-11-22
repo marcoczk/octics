@@ -1,0 +1,45 @@
+def first_blowup = blow_up(u2-x2y-xy2,ideal(x,y,u),u);
+
+def sloc1 = primdecGTZ(slocus(first_blowup[2][1][3]));
+def sloc2 = primdecGTZ(slocus(first_blowup[2][2][3]));
+
+def subst1 = delete(first_blowup[2][1],3);
+def subst2 = delete(first_blowup[2][2],3);
+
+def l1_1 = sloc1[1][2];
+def l1_2 = sloc1[2][2];
+
+def l2_1 = sloc2[1][2];
+def l2_2 = sloc2[2][2];
+
+l1_1 = std(subst1+l1_1);
+l1_2 = std(subst1+l1_2);
+
+l2_1 = std(subst2+l2_1);
+l2_2 = std(subst2+l2_2);
+
+l1_2[2]=p(1)+p(2);
+l2_2[2]=p(1)+p(2);
+
+def three_lines = std(intersect(l1_1,l1_2,l2_1,l2_2));
+
+def homog3_lines = std(intersect(three_lines,ideal(p(1..3))^3));
+
+def final_blowup_l3 = std(subst(homog3_lines,p(1),x,p(2),y,p(3),u)*ideal(x,y,u));
+
+def blowup_l3 = ideal(0);
+blowup_l3[1]=y^5;
+blowup_l3[2]=x*y^3;
+blowup_l3[3]=x^2*y^2+x*y^3;
+blowup_l3[4]=x^3*y+x^2*y^2;
+blowup_l3[5]=x^5+x^4*y;
+blowup_l3[6]=u*y^3;
+blowup_l3[7]=u*x*y^2;
+blowup_l3[8]=u*x^2*y+u*x*y^2;
+blowup_l3[9]=u*x^3;
+blowup_l3[10]=u^2*y^2;
+blowup_l3[11]=u^2*x*y;
+blowup_l3[12]=u^2*x^2;
+blowup_l3[13]=u^3*y;
+blowup_l3[14]=u^3*x;
+blowup_l3[15]=u^4;

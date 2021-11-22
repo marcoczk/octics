@@ -1,0 +1,61 @@
+
+//pierwsze podejście:
+
+def four_points = std(intersect(ideal(x,y,z,u),ideal(x-a,y,z,u),ideal(x,y-a,z,u),ideal(x,y,z-a,u)));
+def blowup_4_points = blow_up(u^2-x*y*z*(x+y+z+a),four_points,u);
+
+//rozdmuchanie jest na tyle skomplikowane, że funkcja blow_up() ma problem z wyliczeniem wszystkich afinicznych wykresów
+
+
+//drugie podejście
+
+def six_lines = primdecGTZ(slocus(u^2-x*y*z*(x+y+z+a)));
+def six_lines_id = std(intersect(six_lines[1][2],six_lines[2][2],six_lines[3][2],six_lines[4][2],six_lines[5][2],six_lines[6][2]));
+
+def res = blow_up(u^2-x*y*z*(x+y+z+a),six_lines_id,u);
+//def res = blow_up(u^2-x*y*z*(x+y+z+a),ideal(xy,yz,xz,u),u);
+
+std(delete(elim_all(subst(res[2][4],a,1)),1));
+elim_all(subst(res[2][5],a,0));
+primdecGTZ(slocus(elim_all(subst(res[2][5],a,0,x,0,u,0,y,0,z,0))));
+
+def aff_piece1 = elim_all(subst(res[2][1],a,1));
+def sloc1 = ideal(aff_piece1[5]);
+def subst1 = delete(first_blowup[2][1],5);
+
+def aff_piece2 = elim_all(subst(res[2][2],a,1));
+def sloc1 = ideal(aff_piece2[3],aff_piece2[4],aff_piece2[5]);
+def subst1 = ideal(aff_piece2[1],aff_piece2[2]);
+
+def aff_piece3 = elim_all(subst(res[2][3],a,1));
+def sloc1 = ideal(aff_piece1[3],aff_piece1[4],aff_piece1[5]);
+def subst1 = ideal(aff_piece1[1],aff_piece1[2]);
+
+def aff_piece4 = elim_all(subst(res[2][4],a,1));
+def sloc1 = ideal(aff_piece1[3],aff_piece1[4],aff_piece1[5]);
+def subst1 = ideal(aff_piece1[1],aff_piece1[2]);
+
+def aff_piece5 = elim_all(subst(res[2][5],a,1));
+def sloc1 = ideal(aff_piece1[3],aff_piece1[4],aff_piece1[5]);
+def subst1 = ideal(aff_piece1[1],aff_piece1[2]);
+
+
+def sloc1 = primdecGTZ(slocus(first_blowup[2][1][size(first_blowup[2][1])]));
+def sloc2 = primdecGTZ(slocus(first_blowup[2][2][size(first_blowup[2][2])]));
+def sloc3 = primdecGTZ(slocus(first_blowup[2][3][size(first_blowup[2][3])]));
+
+def subst1 = delete(first_blowup[2][1],size(first_blowup[2][1]));
+def subst2 = delete(first_blowup[2][2],size(first_blowup[2][2]));
+def subst3 = delete(first_blowup[2][3],size(first_blowup[2][3]));
+
+def l1_1 = std(homogenize(std(sloc1[1][2]+subst1),ideal(p(1..10)),p(1)));
+def l1_2 = std(homogenize(std(sloc1[2][2]+subst1),ideal(p(1..10)),p(1)));
+def l1_3 = std(homogenize(std(sloc1[3][2]+subst1),ideal(p(1..10)),p(1)));
+
+def l2_1 = std(homogenize(std(sloc2[1][2]+subst2),ideal(p(1..10)),p(2)));
+def l2_2 = std(homogenize(std(sloc2[2][2]+subst2),ideal(p(1..10)),p(2)));
+def l2_3 = std(homogenize(std(sloc2[3][2]+subst2),ideal(p(1..10)),p(2)));
+
+def l3_1 = std(homogenize(std(sloc3[1][2]+subst3),ideal(p(1..10)),p(3)));
+def l3_2 = std(homogenize(std(sloc3[2][2]+subst3),ideal(p(1..10)),p(3)));
+def l3_3 = std(homogenize(std(sloc3[3][2]+subst3),ideal(p(1..10)),p(3)));

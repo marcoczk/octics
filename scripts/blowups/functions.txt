@@ -1,0 +1,193 @@
+LIB "elim.lib";
+LIB "sing.lib";
+LIB "primdec.lib";
+LIB "ring.lib";
+LIB "teachstd.lib";
+LIB "rootsur.lib";
+LIB "numerAlg.lib";
+
+ring R = (0,A,B,C),(p(1..10),w(1..10),u,x,y,z,t,w,o),lp;
+//ring R = (0,a,b,c),(p(1..8),u,x,y,z,t,w,o),lp;
+
+proc elim_all_but(ideal I_in, poly excluded)
+{
+  ideal I_out = I_in;
+  int eliminated = 0;
+  int i=0;
+  int j=0;
+  int k=0;
+  int can_elim = 0;
+  poly ith_elem;
+  matrix m = 0;
+  ideal eliminated_elems;
+  while(1){
+    eliminated=0;
+    for (i=1 ; i<=size(I_out) ; i=i+1){
+      if(eliminated == 1){break};
+      ith_elem = I_out[i];
+      for (j=1 ; j<=size(ith_elem) ; j=j+1){
+        if((deg(ith_elem[j])!=1) || (id_equal(std(ith_elem[j]),std(excluded)))){j=j+1;continue;}
+        can_elim = 1;
+        m = coeffs(ith_elem,ith_elem[j]);
+        for(k=2 ; k <= size(m) ; k=k+1){
+          if((k==2) and (m[k,1]!=1)and (m[k,1]!=-1)){can_elim=0;break;}
+          if((k>2) and (m[k,1]!=0)){can_elim=0;break;}
+        }
+        if(can_elim == 0){j=j+1;continue;}
+        eliminated = 1;
+        eliminated_elems = subst(eliminated_elems,ith_elem[j],ith_elem-ith_elem[j]);
+        eliminated_elems = eliminated_elems + ith_elem;
+        I_out = elim(I_out,ith_elem[j]);
+        break;
+      }
+    }
+    if(eliminated == 0){break;}
+  }
+  I_out = eliminated_elems + I_out;
+  return(I_out);
+};
+
+proc elim_all(ideal I_in){
+  ideal I_out = I_in;
+  int eliminated = 0;
+  int i=0;
+  int j=0;
+  int k=0;
+  int can_elim = 0;
+  poly ith_elem;
+  matrix m = 0;
+  ideal eliminated_elems;
+  while(1){
+    eliminated=0;
+    for (i=1 ; i<=size(I_out) ; i=i+1){
+      if(eliminated == 1){break};
+      ith_elem = I_out[i];
+      for (j=1 ; j<=size(ith_elem) ; j=j+1){
+        if(deg(ith_elem[j])!=1){j=j+1;continue;}
+        can_elim = 1;
+        m = coeffs(ith_elem,ith_elem[j]);
+        for(k=2 ; k <= size(m) ; k=k+1){
+          if((k==2) and (m[k,1]!=1)and (m[k,1]!=-1)){can_elim=0;break;}
+          if((k>2) and (m[k,1]!=0)){can_elim=0;break;}
+        }
+        if(can_elim == 0){j=j+1;continue;}
+        eliminated = 1;
+        eliminated_elems = subst(eliminated_elems,ith_elem[j],ith_elem-ith_elem[j]);
+        eliminated_elems = eliminated_elems + ith_elem;
+        I_out = elim(I_out,ith_elem[j]);
+        break;
+      }
+    }
+    if(eliminated == 0){break;}
+  }
+  I_out = eliminated_elems + I_out;
+  return(I_out);
+};
+
+proc blow_up_glob(ideal X, ideal B, ideal S){
+    ideal mat_ideal = p(1);
+    int i=0;
+    for(i=2;i<=size(B);i=i+1){
+        mat_ideal = mat_ideal+p(i);
+    }
+    matrix m[2][size(B)] = B,mat_ideal;
+    ideal J = wedge(m,2),X;
+    return(std(sat(J,S)[1]));
+};
+
+proc blow_up(ideal X, ideal B, ideal S){
+    ideal Js = blow_up_glob(X,B,S);
+    ideal Jloc;
+    list result;
+    result = Js;
+    list affine_pieces;
+    int i=0;
+    for(i=1;i<=size(B);i=i+1){
+        Jloc = std(subst(Js,p(i),1));
+        affine_pieces = affine_pieces + list(elim_all(Jloc));
+    }
+    return(result+list(affine_pieces));
+};
+
+proc aff_blow(ideal X, ideal B, ideal S, int k){
+    ideal mat_ideal = p(1);
+    int i=0;
+    for(i=2;i<=size(B);i=i+1){
+        mat_ideal = mat_ideal+p(i);
+    }
+    matrix m[2][size(B)] = B,mat_ideal;
+    m[2,k] = 1;
+    ideal J = wedge(m,2),X;
+    return(elim_all(sat(J,S)[1]));
+};
+
+proc comp_aff_blow(ideal X, ideal B1, ideal B2, ideal S, int k, int j){
+    def first_step = swap_pw(aff_blow(X,B1,S,k),size(B1));
+    return(aff_blow(swap_pw(first_step,size(B1)),swap_pw(B2,size(B1)),S,j));
+};
+
+proc is_symmetric(ideal I,ideal vars){
+  I = std(I);
+  int i=0;
+  int j=0;
+  for (i=1 ; i<=size(I) ; i=i+1){
+    if(reduce(subst(I[i],vars[1],t,vars[size(vars)],vars[1],t,vars[size(vars)]),I) != 0){
+        print(I[i]);
+        printf("%s<->%s",vars[1],vars[size(vars)]);
+        return(0);
+      }
+    for (j=1 ; j<=size(vars)-1 ; j=j+1){      
+        if(reduce(subst(I[i],vars[j],t,vars[j+1],vars[j],t,vars[j+1]),I) != 0){
+        print(I[i]);
+        printf("%s<->%s",vars[j],vars[j+1]);
+        return(0);
+      }
+    }
+  }
+  return(1);
+};
+
+proc homogenize(ideal I, ideal vars,poly homog_var){
+    ideal out = std(I);
+    int i=0;
+    for (i=1 ; i<=size(vars) ; i=i+1){ out = subst(out,vars[i],vars[i]*o); }
+    out = out + (o*homog_var - 1);
+    return(elim(out,o));
+};
+
+proc id_equal(ideal I1, ideal I2){
+    if(size(I1)!=size(I2)){return(0);}
+    int i=0;
+    for(i=1;i<=size(I1);i=i+1){if(I1[i]!=I2[i]){return(0);}}
+    return(1);
+};
+
+proc pick_unique(list ideals){
+    int i=0;
+    int j=0;
+    for (i=1 ; i<=size(ideals) ; i=i+1){
+        for(j=i+1 ; j<=size(ideals) ; j=j+1){
+            if(id_equal(std(ideals[i]),std(ideals[j]))){printf("%s<->%s",i,j);}
+        }
+    }
+};
+
+proc swap_pw(ideal input,int num_of_ps){
+    ideal output = input;
+    for (int i=1 ; i<=num_of_ps ; i=i+1){
+        output = subst(output,p(i),w(i));
+    }
+    return(output);
+};
+
+proc swap_pk(ideal input,int num_of_ps){
+    ideal output = input;
+    for (int i=1 ; i<=num_of_ps ; i=i+1){
+        output = subst(output,p(i),k(i));
+    }
+    return(output);
+};
+
+proc ps(ideal I){
+    return(primdecGTZ(slocus(I)));
+};

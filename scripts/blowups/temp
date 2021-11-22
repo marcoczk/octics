@@ -1,0 +1,124 @@
+ideal p40 = u2 - x2yz - xy2z - xyz2;
+
+def res = blow_up(p40,ideal(u,x2,y2,z2,xy,xz,yz),u);res;
+
+primdecGTZ(slocus(res[2][2][7]));
+
+def rres = blow_up(res[2][2][7],ideal(p(1),p(5)+1,p(6)+1),p(1));
+
+primdecGTZ(slocus(rres[2][2]));
+
+ideal p30 = u2 - x2y - xy2;
+
+blow_up(p30,ideal(ux2,uy2,uxy,x2y,xy2),u); <-- działa
+
+_[1]=u*y^2
+_[2]=x^2*y+x*y^2
+_[3]=u*x*y
+_[4]=u^2*y
+_[5]=u*x^2
+_[6]=u^2*x
+_[7]=u^3
+_[8]=y^4
+_[9]=x*y^3
+_[10]=x^4
+
+ideal ffinal = uy2,x2y+xy2,uxy,u2y,ux2,u2x,u3,y4,xy3,x4;
+ideal final = std(ffinal*ideal(u,x,y));
+
+
+
+//potem rozdmuchujemy 4 proste
+
+ideal simplex_id = u^2 - x*y*z*(x+y+z-t);
+
+ideal two_lines = intersect(ideal(u,x,y),ideal(u,z,x+y+z-t));
+
+two_lines[5] = x2-xt+xy;
+
+def two_lines_bl = blow_up(simplex_id,two_lines,u);
+
+ideal second_piece = ideal(p(2)^2 - z*x - z*p(3), x^2+x*z-x*t-y*p(3));
+
+primdecGTZ(slocus(two_lines_bl[2][4][5]));
+primdecGTZ(slocus(two_lines_bl[2][5][5]));
+
+ideal line1 = ideal(p(1),p(2),p(5),p(3),u,x,z);
+ideal line2 = ideal(p(1),p(2)+p(4),p(5),p(3),u,x,y-t-z);
+ideal line3 = ideal(p(1),p(3),p(4),p(2),u,y,z);
+ideal line4 = ideal(p(1),p(2),p(3)+p(5),p(4),u,x-t-z,y);
+
+ideal four_lines = std(intersect(line1,line2,line3,line4));
+
+ideal homog_4lines = std(intersect(four_lines,ideal(p(1..5))^2));
+
+subst_4lines = std(subst(homog_4lines,p(1),two_lines[1],p(2),two_lines[2],p(3),two_lines[3],p(4),two_lines[4],p(5),two_lines[5]));
+
+std(subst_4lines*two_lines);
+
+//potem składamy oba te rozdmuchania
+
+//potem wstawiamy t=0 i rozdmuchujemy
+
+//to nam da dwa node'y
+
+//te node'y zostawiamy!!
+
+//sprawdzic ffinal ^^^
+
+
+def res = blow_up2(p30,ideal(u,x,y),u);
+
+primdecGTZ(slocus(res[2][2][1]));
+
+primdecGTZ(slocus(res[2][3][1]));
+
+def interr = intersect(ideal(p(3),p(1),x),ideal(p(3)+p(2),p(1),x),ideal(p(2),p(1),y),ideal(p(3)+p(2),p(1),y));
+
+def homog_id = intersect(interr,ideal(p(1..3))^3);
+
+def homog_id_subst = std(subst(homog_id,p(1),u,p(2),x,p(3),y));
+
+def ffinal = std(homog_id_subst * ideal(u,x,y));
+
+std(homog_id_subst + p30);
+
+u^2, u*y^2, u*x*y, u*x^2, x*y^3+y^4, x^4-y^4, y^5
+
+
+
+//sprawdzic porzadki (np. lp) i kolejnosci zmiennych
+final_deform
+u^3,
+u^2*y*z,
+u^2*x*z,
+u^2*x*y+u^2*y^2,
+u^2*x^2-u^2*y^2,
+u*y^2*z^2,
+u*x*y*z^2,
+u*x^2*z^2,
+u*x*y^2*z+u*y^3*z,
+u*x^2*y*z-u*y^3*z,
+u*x^3*z+u*y^3*z,
+u*x^2*y^2+2*u*x*y^3+u*y^4,
+u*x^3*y-3*u*x*y^3-2*u*y^4,
+u*x^4+4*u*x*y^3+3*u*y^4,
+x*y^2*z^3,
+x^2*y*z^3,
+x*y^3*z^2+y^4*z^2+y^3*z^3,
+x^2*y^2*z^2-y^4*z^2-y^3*z^3,
+x^3*y*z^2+y^4*z^2+y^3*z^3,
+x^4*z^2-y^4*z^2+x^3*z^3-y^3*z^3,
+x^2*y^3*z+2*x*y^4*z+y^5*z-y^3*z^3,
+x^3*y^2*z+2*x^2*y^3*z+x*y^4*z,
+x^4*y*z-3*x^2*y^3*z-2*x*y^4*z,
+x^5*z-5*x*y^4*z-4*y^5*z-x^3*z^3+4*y^3*z^3,
+x^4*y^2+3*x^3*y^3+3*x^2*y^4+x*y^5,
+x^5*y-6*x^3*y^3-8*x^2*y^4-3*x*y^5,
+y^3*z^4,
+x^3*z^4,
+y^4*z^3+y^3*z^4
+
+
+
+

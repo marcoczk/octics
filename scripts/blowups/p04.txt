@@ -1,0 +1,29 @@
+def first_blowup = blow_up(ideal(u2-xyz*(x+y+z)),ideal(x2,y2,z2,xy,xz,yz,u),u);
+
+def sloc1 = primdecGTZ(slocus(first_blowup[2][1][7]));
+def sloc2 = primdecGTZ(slocus(first_blowup[2][2][7]));
+def sloc3 = primdecGTZ(slocus(first_blowup[2][3][7]));
+
+def subst1 = delete(first_blowup[2][1],7);
+def subst2 = delete(first_blowup[2][2],7);
+def subst3 = delete(first_blowup[2][3],7);
+
+def l1_1 = std(homogenize(std(sloc1[1][2]+subst1),ideal(p(1..10)),p(1)));
+def l1_2 = std(homogenize(std(sloc1[2][2]+subst1),ideal(p(1..10)),p(1)));
+def l1_3 = std(homogenize(std(sloc1[3][2]+subst1),ideal(p(1..10)),p(1)));
+
+def l2_1 = std(homogenize(std(sloc2[1][2]+subst2),ideal(p(1..10)),p(2)));
+def l2_2 = std(homogenize(std(sloc2[2][2]+subst2),ideal(p(1..10)),p(2)));
+def l2_3 = std(homogenize(std(sloc2[3][2]+subst2),ideal(p(1..10)),p(2)));
+
+def l3_1 = std(homogenize(std(sloc3[1][2]+subst3),ideal(p(1..10)),p(3)));
+def l3_2 = std(homogenize(std(sloc3[2][2]+subst3),ideal(p(1..10)),p(3)));
+def l3_3 = std(homogenize(std(sloc3[3][2]+subst3),ideal(p(1..10)),p(3)));
+
+def six_lines = std(intersect(l1_1,l1_2,l1_3,l2_1,l2_2,l2_3,l3_1,l3_2,l3_3));
+
+def homog6_lines = std(intersect(six_lines,ideal(p(1..7))^2));
+
+def final_blowup_p04 = std(subst(homog6_lines,p(1),x2,p(2),y2,p(3),z2,p(4),xy,p(5),xz,p(6),yz,p(7),u)*ideal(x2,y2,z2,xy,xz,yz,u));
+
+def blowup_primdec = primdecGTZ(final_blowup);

@@ -1,0 +1,718 @@
+proc get_incidence(matrix arr){
+    def subsets = list(list(1,2,3,4),list(1,2,3,5),list(1,2,3,6),list(1,2,3,7),list(1,2,3,8),list(1,2,4,5),list(1,2,4,6),list(1,2,4,7),list(1,2,4,8),list(1,2,5,6),list(1,2,5,7),list(1,2,5,8),list(1,2,6,7),list(1,2,6,8),list(1,2,7,8),list(1,3,4,5),list(1,3,4,6),list(1,3,4,7),list(1,3,4,8),list(1,3,5,6),list(1,3,5,7),list(1,3,5,8),list(1,3,6,7),list(1,3,6,8),list(1,3,7,8),list(1,4,5,6),list(1,4,5,7),list(1,4,5,8),list(1,4,6,7),list(1,4,6,8),list(1,4,7,8),list(1,5,6,7),list(1,5,6,8),list(1,5,7,8),list(1,6,7,8),list(2,3,4,5),list(2,3,4,6),list(2,3,4,7),list(2,3,4,8),list(2,3,5,6),list(2,3,5,7),list(2,3,5,8),list(2,3,6,7),list(2,3,6,8),list(2,3,7,8),list(2,4,5,6),list(2,4,5,7),list(2,4,5,8),list(2,4,6,7),list(2,4,6,8),list(2,4,7,8),list(2,5,6,7),list(2,5,6,8),list(2,5,7,8),list(2,6,7,8),list(3,4,5,6),list(3,4,5,7),list(3,4,5,8),list(3,4,6,7),list(3,4,6,8),list(3,4,7,8),list(3,5,6,7),list(3,5,6,8),list(3,5,7,8),list(3,6,7,8),list(4,5,6,7),list(4,5,6,8),list(4,5,7,8),list(4,6,7,8),list(5,6,7,8));
+    def output = list();
+    ideal plane = 0;
+    int i = 0;
+    int j = 0;
+    for (i=1 ; i<=size(subsets) ; i=i+1){
+        plane = 0;
+        for (j=1 ; j<=4 ; j=j+1){
+            plane = ideal(plane + ideal(arr[subsets[i][j],1]*x+arr[subsets[i][j],2]*y+arr[subsets[i][j],3]*z+arr[subsets[i][j],4]*t));
+        }
+        if(not id_equal(std(elim_all(plane)),std(ideal(x,y,z,t)))){
+            output = output + list(subsets[i]);
+        }
+    }
+    return(output);
+};
+
+proc is_in(list elems,int elem){
+    for (int i=1 ; i<=size(elems) ; i=i+1){
+        if(elem == elems[i]){return(1);}
+    }
+    return(0);
+};
+
+proc find_l3(list incidence){
+    def output = list();
+    int i = 0;
+    int j = 0;
+    int count = 0;
+    def three_subsets= list(list(1,2,3),list(1,2,4),list(1,2,5),list(1,2,6),list(1,2,7),list(1,2,8),list(1,3,4),list(1,3,5),list(1,3,6),list(1,3,7),list(1,3,8),list(1,4,5),list(1,4,6),list(1,4,7),list(1,4,8),list(1,5,6),list(1,5,7),list(1,5,8),list(1,6,7),list(1,6,8),list(1,7,8),list(2,3,4),list(2,3,5),list(2,3,6),list(2,3,7),list(2,3,8),list(2,4,5),list(2,4,6),list(2,4,7),list(2,4,8),list(2,5,6),list(2,5,7),list(2,5,8),list(2,6,7),list(2,6,8),list(2,7,8),list(3,4,5),list(3,4,6),list(3,4,7),list(3,4,8),list(3,5,6),list(3,5,7),list(3,5,8),list(3,6,7),list(3,6,8),list(3,7,8),list(4,5,6),list(4,5,7),list(4,5,8),list(4,6,7),list(4,6,8),list(4,7,8),list(5,6,7),list(5,6,8),list(5,7,8),list(6,7,8));
+    for (i=1 ; i<=size(three_subsets) ; i=i+1){
+        count = 0;
+        for (j=1 ; j<=size(incidence) ; j=j+1){
+            if(is_in(incidence[j],three_subsets[i][1]) and is_in(incidence[j],three_subsets[i][2]) and is_in(incidence[j],three_subsets[i][3])){
+                count = count+1;
+            }
+        }
+        if(count>=5){
+            output = output + list(three_subsets[i]);
+        }
+    }
+    return(output);
+};
+
+proc find_p4(list incidence){
+    def triples = find_l3(incidence);
+    def fives_list = find_p5(incidence);
+    def all_fives = fives_list[1]+fives_list[2]+fives_list[3];
+    def all_fours = list();
+    def p41_list = list();
+    def p40_list = list();
+    int count = 0;
+    int i = 0;
+    int j = 0;
+    def five_subsets= list(list(1,2,3,4,5),list(1,2,3,4,6),list(1,2,3,4,7),list(1,2,3,4,8),list(1,2,3,5,6),list(1,2,3,5,7),list(1,2,3,5,8),list(1,2,3,6,7),list(1,2,3,6,8),list(1,2,3,7,8),list(1,2,4,5,6),list(1,2,4,5,7),list(1,2,4,5,8),list(1,2,4,6,7),list(1,2,4,6,8),list(1,2,4,7,8),list(1,2,5,6,7),list(1,2,5,6,8),list(1,2,5,7,8),list(1,2,6,7,8),list(1,3,4,5,6),list(1,3,4,5,7),list(1,3,4,5,8),list(1,3,4,6,7),list(1,3,4,6,8),list(1,3,4,7,8),list(1,3,5,6,7),list(1,3,5,6,8),list(1,3,5,7,8),list(1,3,6,7,8),list(1,4,5,6,7),list(1,4,5,6,8),list(1,4,5,7,8),list(1,4,6,7,8),list(1,5,6,7,8),list(2,3,4,5,6),list(2,3,4,5,7),list(2,3,4,5,8),list(2,3,4,6,7),list(2,3,4,6,8),list(2,3,4,7,8),list(2,3,5,6,7),list(2,3,5,6,8),list(2,3,5,7,8),list(2,3,6,7,8),list(2,4,5,6,7),list(2,4,5,6,8),list(2,4,5,7,8),list(2,4,6,7,8),list(2,5,6,7,8),list(3,4,5,6,7),list(3,4,5,6,8),list(3,4,5,7,8),list(3,4,6,7,8),list(3,5,6,7,8),list(4,5,6,7,8));
+    for(i=1 ; i<=size(incidence) ; i=i+1){
+        count = 0;
+        for (j=1 ; j<=size(all_fives) ; j=j+1){
+            if((is_in(incidence[i],all_fives[j][1]) + 
+                is_in(incidence[i],all_fives[j][2]) + 
+                is_in(incidence[i],all_fives[j][3]) +
+                is_in(incidence[i],all_fives[j][4]) +
+                is_in(incidence[i],all_fives[j][5])) >= 4){
+                count = count+1;
+            }
+        }
+        if(count==0){
+            all_fours = all_fours + list(incidence[i]);
+        }
+    }
+    
+    for(i=1 ; i<=size(all_fours) ; i=i+1){
+        count = 0;
+        for (j=1 ; j<=size(triples) ; j=j+1){
+            if((is_in(triples[j],all_fours[i][1]) + 
+              is_in(triples[j],all_fours[i][2]) + 
+              is_in(triples[j],all_fours[i][3]) +
+              is_in(triples[j],all_fours[i][4])) >= 3){
+                count = count + 1;
+            }
+        }
+        if(count==1){p41_list = p41_list + list(all_fours[i])};
+        if(count==0){p40_list = p40_list + list(all_fours[i])};
+    }
+    return(list(p40_list)+list(p41_list));
+};
+
+proc find_p5(list incidence){
+    def triples = find_l3(incidence);
+    def all_fives = list();
+    def p52_list = list();;
+    def p51_list = list();
+    def p50_list = list();
+    def output = list();
+    int count = 0;
+    int i = 0;
+    int j = 0;
+    def five_subsets= list(list(1,2,3,4,5),list(1,2,3,4,6),list(1,2,3,4,7),list(1,2,3,4,8),list(1,2,3,5,6),list(1,2,3,5,7),list(1,2,3,5,8),list(1,2,3,6,7),list(1,2,3,6,8),list(1,2,3,7,8),list(1,2,4,5,6),list(1,2,4,5,7),list(1,2,4,5,8),list(1,2,4,6,7),list(1,2,4,6,8),list(1,2,4,7,8),list(1,2,5,6,7),list(1,2,5,6,8),list(1,2,5,7,8),list(1,2,6,7,8),list(1,3,4,5,6),list(1,3,4,5,7),list(1,3,4,5,8),list(1,3,4,6,7),list(1,3,4,6,8),list(1,3,4,7,8),list(1,3,5,6,7),list(1,3,5,6,8),list(1,3,5,7,8),list(1,3,6,7,8),list(1,4,5,6,7),list(1,4,5,6,8),list(1,4,5,7,8),list(1,4,6,7,8),list(1,5,6,7,8),list(2,3,4,5,6),list(2,3,4,5,7),list(2,3,4,5,8),list(2,3,4,6,7),list(2,3,4,6,8),list(2,3,4,7,8),list(2,3,5,6,7),list(2,3,5,6,8),list(2,3,5,7,8),list(2,3,6,7,8),list(2,4,5,6,7),list(2,4,5,6,8),list(2,4,5,7,8),list(2,4,6,7,8),list(2,5,6,7,8),list(3,4,5,6,7),list(3,4,5,6,8),list(3,4,5,7,8),list(3,4,6,7,8),list(3,5,6,7,8),list(4,5,6,7,8));
+    for(i=1 ; i<=size(five_subsets) ; i=i+1){
+        count = 0;
+        for (j=1 ; j<=size(incidence) ; j=j+1){
+            if((is_in(incidence[j],five_subsets[i][1]) + 
+                is_in(incidence[j],five_subsets[i][2]) + 
+                is_in(incidence[j],five_subsets[i][3]) +
+                is_in(incidence[j],five_subsets[i][4]) +
+                is_in(incidence[j],five_subsets[i][5])) >= 4){
+                count = count+1;
+            }
+        }
+        if(count>=5){
+            all_fives = all_fives + list(five_subsets[i]);
+        }
+    }
+    for(i=1 ; i<=size(all_fives) ; i=i+1){
+        count = 0;
+        for (j=1 ; j<=size(triples) ; j=j+1){
+            if((is_in(triples[j],all_fives[i][1]) + 
+              is_in(triples[j],all_fives[i][2]) + 
+              is_in(triples[j],all_fives[i][3]) +
+              is_in(triples[j],all_fives[i][4]) +
+              is_in(triples[j],all_fives[i][5])) >= 3){
+                count = count + 1;
+            }
+        }
+        if(count==2){p52_list = p52_list + list(all_fives[i])};
+        if(count==1){p51_list = p51_list + list(all_fives[i])};
+        if(count==0){p50_list = p50_list + list(all_fives[i])};
+    }
+    return(list(p50_list)+list(p51_list)+list(p52_list));
+};
+
+
+
+
+def arr1=t*x*y*z*(t + x)*(t + z)*(x + y)*(y + z);
+matrix mat1[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,0,0,1,
+0,0,1,1,
+1,1,0,0,
+0,1,1,0];
+
+def arr3=t*x*y*z*(-t + y)*(x + y)*(y + z)*(t + x - y - z);
+matrix mat3[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,0,-1,
+1,1,0,0,
+0,1,1,0,
+1,-1,-1,1];
+
+def arr19=t*x*y*z*(x + y)*(y + z)*(-t + x - z)*(-t + x + y + z);
+matrix mat19[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+1,0,-1,-1,
+1,1,1,-1];
+
+def arr32=t*x*y*z*(x + y)*(y + z)*(-t + x - y - z)*(t + x + y - z);
+matrix mat32[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+1,-1,-1,-1,
+1,1,-1,1];
+
+def arr69=t*x*y*z*(x + y)*(-t + x - y)*(x - y + z)*(-t + x + y - z);
+matrix mat69[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+1,-1,0,-1,
+1,-1,1,0,
+1,1,-1,-1];
+
+def arr93=t*x*y*z*(x + y)*(-t + x + z)*(-t + y - z)*(x - y + z);
+matrix mat93[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,-1,-1,
+1,-1,1,0,
+1,0,1,-1];
+
+def arr238=t*x*y*z*(-t + x + y + z)*(t - x + y + z)*(t + x - y + z)*(t + x + y - z);
+matrix mat238[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,-1,-1,
+1,-1,1,1,
+1,1,-1,1,
+1,1,1,-1];
+
+def arr239=t*x*y*z*(t + x + y)*(t + x + z)*(t + y + z)*(x + y + z);
+matrix mat239[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,1,
+1,0,1,1,
+0,1,1,1,
+1,1,1,0];
+
+def arr240=t*x*y*z*(x + y + z)*(-t + x - y - z)*(t + x - y + z)*(t + x + y - z);
+matrix mat240[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,1,0,
+1,-1,-1,-1,
+1,-1,1,1,
+1,1,-1,1];
+
+def arr241=t*x*y*z*(-t + x + z)*(t + y - z)*(-t + x + y - z)*(t + x + y + z);
+matrix mat241[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,-1,1,
+1,0,1,-1,
+1,1,-1,-1,
+1,1,1,1];
+
+def arr245=t*x*y*z*(-t + x - y)*(t + y + z)*(x + y + z)*(t + x - y + z);
+matrix mat245[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,0,-1,
+0,1,1,1,
+1,1,1,0,
+1,-1,1,1];
+
+def arr2=t*x*y*z*(t + z)*(x + y)*(y + z)*(A*x + B*t);
+matrix mat2[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,0,1,1,
+1,1,0,0,
+0,1,1,0,
+A,0,0,B];
+
+def arr4=t*x*y*z*(x + y)*(y + z)*(-A*t + A*x + A*y + B*z)*(-A*t + A*x + B*y + B*z);
+matrix mat4[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+A,A,B,-A,
+A,B,B,-A];
+
+def arr5=t*x*y*z*(x + y)*(y + z)*(-t + x + y + z)*(-A*t + A*x + A*z + B*y);
+matrix mat5[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+1,1,1,-1,
+A,B,A,-A];
+
+def arr8=t*x*y*z*(-t + z)*(x + y)*(y + z)*(A*x + B*t - B*y - B*z);
+matrix mat8[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,0,1,-1,
+1,1,0,0,
+0,1,1,0,
+A,-B,-B,B];
+
+def arr10=t*x*y*z*(-t + z)*(x + y)*(y + z)*(-A*t + A*x - B*y - B*z);
+matrix mat10[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,0,1,-1,
+1,1,0,0,
+0,1,1,0,
+A,-B,-B,-A];
+
+def arr13=t*x*y*z*(x + y)*(y + z)*(-t + x - z)*(A*x - A*z + B*t);
+matrix mat13[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+1,0,-1,-1,
+A,0,-A,B];
+
+def arr16=t*x*y*z*(x + y)*(y + z)*(-A*t + A*y - B*z)*(A*t - A*y + B*x);
+matrix mat16[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+0,A,-B,-A,
+B,-A,0,A];
+
+def arr20=t*x*y*z*(x + y)*(y + z)*(t + x - z)*(-A*t + A*y - B*z);
+matrix mat20[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+1,0,-1,1,
+0,A,-B,-A];
+
+def arr21=t*x*y*z*(x + y)*(y + z)*(-A*t + A*x + B*z)*(A*x - B*y - t*(A + B));
+matrix mat21[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+A,-B,0,-A - B,
+A,0,B,-A];
+
+def arr33=t*x*y*z*(x + y)*(y + z)*(t + x - z)*(A*x - A*y - A*z + B*t);
+matrix mat33[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,1,0,
+1,0,-1,1,
+A,-A,-A,B];
+
+def arr34=t*x*y*z*(x + y)*(x + z)*(A*y - A*z + B*t)*(t + x + y + z);
+matrix mat34[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+1,0,1,0,
+1,1,1,1,
+0,A,-A,B];
+
+def arr35=t*x*y*z*(A*x + B*y)*(A*t + A*x + B*y)*(A*t + B*y + B*z)*(t + x + y + z);
+matrix mat35[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,1,1,
+A,B,0,0,
+A,B,0,A,
+0,B,B,A];
+
+def arr36=t*x*y*z*(x + y)*(t + y - z)*(A*t + A*x + A*y + B*z)*(A*t + A*x - B*y + B*z);
+matrix mat36[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,-1,1,
+A,-B,B,A,
+A,A,B,A];
+
+def arr53=t*x*y*z*(t + z)*(x + y)*(-A*t + A*x - A*z - B*y)*(A*t + B*x + B*y - B*z);
+matrix mat53[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,0,1,1,
+1,1,0,0,
+A,-B,-A,-A,
+B,B,-B,A];
+
+def arr70=t*x*y*z*(A*x + B*y)*(-t + x - y)*(-t + y - z)*(x - y + z);
+matrix mat70[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,0,-1,
+0,1,-1,-1,
+1,-1,1,0,
+A,B,0,0];
+
+def arr71=t*x*y*z*(x + y)*(-A*t - A*z + B*y)*(A*x + A*z - B*y)*(t + x + y + z);
+matrix mat71[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+1,1,1,1,
+A,-B,A,0,
+0,B,-A,-A];
+
+def arr72=t*x*y*z*(-t + x - y)*(t + y + z)*(x + y + z)*(A*y + B*t + B*z);
+matrix mat72[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,0,-1,
+0,1,1,1,
+1,1,1,0,
+0,A,B,B];
+
+def arr73=t*x*y*z*(-t + y - z)*(A*x + B*t - B*y)*(-t + x + y - z)*(A*x + A*y + B*t + B*z);
+matrix mat73[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,-1,-1,
+1,1,-1,-1,
+A,-B,0,B,
+A,A,B,B];
+
+def arr94=t*x*y*z*(x + y)*(A*x + A*z - B*y)*(-A*z - B*t + B*y)*(-t + x + y + z);
+matrix mat94[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+1,1,1,-1,
+A,-B,A,0,
+0,B,-A,-B];
+
+def arr95=t*x*y*z*(x + y)*(A*x - B*y + B*z)*(t + x + y - z)*(A*x - A*z - B*t - B*y);
+matrix mat95[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+1,1,-1,1,
+A,-B,B,0,
+A,-B,-A,-B];
+
+def arr96=t*x*y*z*(x + y)*(A*t + A*y + B*z)*(t + x + y - z)*(A*t + A*x - B*y + B*z);
+matrix mat96[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+1,1,-1,1,
+0,A,B,A,
+A,-B,B,A];
+
+def arr97=t*x*y*z*(x + y)*(-t + y - z)*(A*t + A*x - B*z)*(t + x + y + z);
+matrix mat97[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,0,
+0,1,-1,-1,
+1,1,1,1,
+A,0,-B,A];
+
+def arr98=t*x*y*z*(-t + x + z)*(t + y + z)*(x + y + z)*(A*y + B*t + B*z);
+matrix mat98[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,0,1,-1,
+0,1,1,1,
+1,1,1,0,
+0,A,B,B];
+
+def arr99=t*x*y*z*(-t + x + z)*(x + y + z)*(A*x - B*y - B*z)*(A*x + B*t - B*z + y*(A + B));
+matrix mat99[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,0,1,-1,
+1,1,1,0,
+A,-B,-B,0,
+A,A + B,-B,B];
+
+def arr100=t*x*y*z*(-A*t + B*y - B*z)*(A*t + A*y + B*z)*(A*x + A*y + B*z)*(t + x + y - z);
+matrix mat100[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,-1,1,
+A,A,B,0,
+0,A,B,A,
+0,B,-B,-A];
+
+def arr144=t*x*y*z*(A*t + A*z + B*y)*(A*x + A*z + B*y)*(t + x - y + z)*(-A*z + B*t + B*x - B*y);
+matrix mat144[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,1,1,
+A,B,A,0,
+0,B,A,A,
+B,-B,-A,B];
+
+def arr152=t*x*y*z*(t + y)*(t + x - y - z)*(t + x + y + z)*(A*x - A*y - B*t + B*z);
+matrix mat152[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,0,1,
+1,-1,-1,1,
+1,1,1,1,
+A,-A,B,-B];
+
+def arr153=t*x*y*z*(t + y + z)*(x + y + z)*(A*t + A*x - B*y)*(A*t + A*x + A*z - B*y);
+matrix mat153[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,1,1,
+1,1,1,0,
+A,-B,0,A,
+A,-B,A,A];
+
+def arr154=t*x*y*z*(x + y + z)*(-A*t + A*x - B*z)*(-t + x + y + z)*(A*x + B*t - B*z + y*(A + B));
+matrix mat154[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,1,0,
+1,1,1,-1,
+A,0,-B,-A,
+A,A + B,-B,B];
+
+def arr155=t*x*y*z*(A*x + A*z + B*y)*(A*x - B*t - B*z)*(A*t + A*x + A*z + B*y)*(A*t + A*x - B*z + y*(A + B));
+matrix mat155[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+A,0,-B,-B,
+A,B,A,0,
+A,A + B,-B,A,
+A,B,A,A];
+
+def arr197=t*x*y*z*(A*t + A*x + B*z)*(A*t + B*y + B*z)*(A*x + B*y + B*z)*(t + x - y - z);
+matrix mat197[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,-1,1,
+A,0,B,A,
+A,B,B,0,
+0,B,B,A];
+
+def arr198=t*x*y*z*(-t + x - y)*(t + y + z)*(x + y + z)*(A*x - A*y - A*z + B*t);
+matrix mat198[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,0,-1,
+0,1,1,1,
+1,1,1,0,
+A,-A,-A,B];
+
+def arr199=t*x*y*z*(-t + x - y)*(-t + x - z)*(A*x - A*z + B*y)*(A*y - A*z + B*x);
+matrix mat199[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,0,-1,
+1,0,-1,-1,
+A,B,-A,0,
+B,A,-A,0];
+
+def arr200=t*x*y*z*(A*t + A*y - B*z)*(A*x - B*t - B*y)*(t + x + y + z)*(A*x + A*y - B*t - B*z);
+matrix mat200[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,1,1,
+A,-B,0,-B,
+0,A,-B,A,
+A,A,-B,-B];
+
+def arr242=t*x*y*z*(-t + x + z)*(x + y + z)*(B*t + x*(A + B) + y*(A + B))*(A*x + B*t - B*z + y*(A + B));
+matrix mat242[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,0,1,-1,
+1,1,1,0,
+A + B,A + B,0,B,
+A,A + B,-B,B];
+
+def arr243=t*x*y*z*(t + x + y)*(t + y + z)*(x + y + z)*(A*t + A*x + A*z + B*y);
+matrix mat243[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,0,1,
+0,1,1,1,
+1,1,1,0,
+A,B,A,A];
+
+def arr244=t*x*y*z*(A*t + A*x + B*z)*(A*t + A*y + B*z)*(t + x + y + z)*(A*x + A*y + B*t + B*z);
+matrix mat244[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,1,1,
+A,0,B,A,
+0,A,B,A,
+A,A,B,B];
+
+def arr246=t*x*y*z*(x + y + z)*(-A*t + A*x - B*z)*(-A*t + A*x + A*z + y*(A + B))*(A*x + B*t - B*z + y*(A + B));
+matrix mat246[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,1,1,0,
+A,0,-B,-A,
+A,A + B,-B,B,
+A,A + B,A,-A];
+
+def arr247=t*x*y*z*(-t + x - y)*(t + y + z)*(x + y + z)*(A*x + B*t - B*z);
+matrix mat247[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,-1,0,-1,
+0,1,1,1,
+1,1,1,0,
+A,0,-B,B];
+
+def arr248=t*x*y*z*(-t + y - z)*(t + x + z)*(x + y + z)*(A*t + A*x - B*z + y*(A + B));
+matrix mat248[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,-1,-1,
+1,0,1,1,
+1,1,1,0,
+A,A + B,-B,A];
+
+def arr249=t*x*y*z*(t + x + z)*(x + y + z)*(A*t + B*y - B*z)*(A*t + A*x - B*z + y*(A + B));
+matrix mat249[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+1,0,1,1,
+1,1,1,0,
+0,B,-B,A,
+A,A + B,-B,A];
+
+def arr250=t*x*y*z*(-t + y + z)*(t + x + z)*(x + y + z)*(A*t + A*x - A*z + B*y);
+matrix mat250[8][4]=[
+0,0,0,1,
+1,0,0,0,
+0,1,0,0,
+0,0,1,0,
+0,1,1,-1,
+1,0,1,1,
+1,1,1,0,
+A,B,-A,A];
+

@@ -1,0 +1,67 @@
+//equation of 4 planes that give p04 point when "w" approaches 0
+def p04 = u^2-x*y*z*(x+y+z+w);
+
+// ps(I) is a shorthand for primdecGTZ(slocus(I))
+def p04_sloc = ps(p04);
+
+// the first and the fifth line in primary decomposition of slocus are disjoint
+def two_lines = std(intersect(p04_sloc[1][1],p04_sloc[5][1]));
+// we simplify the ideal
+two_lines[4] = xy;
+
+//blowing up all 6 lines at once produces unwanted singularities, we blow up two disjoint lines first
+def first_res = blow_up(p04,two_lines,u);
+
+// composition of the first blowup with a blowup along any subset of remaining lines creates ideal with more than 20 generators 
+// this makes any subsequent computation infeasible
+// because of that we will be blowing up the affine charts one by one
+// first we need to change p(i) varibles to w(i) to avoid naming colisions when we will blowing the em up
+
+def aff1 = swap_pw(first_res[2][1],size(two_lines));
+def aff2 = swap_pw(first_res[2][2],size(two_lines));
+def aff3 = swap_pw(first_res[2][3],size(two_lines));
+def aff4 = swap_pw(first_res[2][4],size(two_lines));
+
+//the first two affine pieces contain 2 lines in slocus
+//the third and fourth piece each contain a single line in slocus
+//the fifth piece is smooth
+
+// also, all ideals defining these affine pieces have only the last 3 genetors NOT in the form of: "variable = f(other variables)"
+// we can remove these variables from the ideal along which we blow up, since they are determined by the other variables
+
+def sloc1_list = ps(ideal(aff1[4],aff1[5],aff1[6]));def sloc1 = std(intersect(sloc1_list[1][1],sloc1_list[2][1]));
+def sloc2_list = ps(ideal(aff2[4],aff2[5],aff2[6]));def sloc2 = std(intersect(sloc2_list[1][1],sloc2_list[2][1]));
+def sloc3_list = ps(ideal(aff3[3],aff3[4],aff3[5]));def sloc3 = sloc3_list[1][1];
+def sloc4_list = ps(ideal(aff4[3],aff4[4],aff4[5]));def sloc4 = sloc4_list[1][1];
+ 
+//we compute blowups of singular loci in every affine chart of the first blowups
+
+def second_res1 = blow_up(aff1,sloc1,u);
+def second_res2 = blow_up(aff2,sloc2,u);
+def second_res3 = blow_up(aff3,sloc3,u);
+    def second_res4 = blow_up(aff4,sloc4,u);
+
+//there is only one line in slocus
+def one_line' = ps(aff3)[1][1];
+def second_res = blow_up(aff3,one_line',u);
+
+
+//first three affine pieces are smooth over w=0
+//the fourth one has two lines in slocus for w=0
+def aff4' = elim_all_but(second_res[2][4],w);
+//first nine generators of the ideal are of the form: variable = f(other variables)
+ps(subst(ideal(aff4'[10],aff4'[11],aff4'[12]),w,0));
+
+//the fifth one also has two lines (but with imaginary coefficients)
+def aff5' = elim_all_but(second_res[2][5],w);
+ps(subst(aff5'[11],w,0));
+
+
+
+
+
+
+
+def pk = swap_pk(aff4',size(one_line'));
+def rr = blow_up_glob(pk,ideal(z,k(6)),u);
+def t1 = elim_all(std(subst(rr,p(1),1,w,0)));

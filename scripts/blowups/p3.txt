@@ -1,0 +1,11 @@
+def first_blowup = blow_up(u2-xyz,ideal(xy,yz,xz,u),u);
+
+def sloc1 = primdecGTZ(slocus(first_blowup[2][1][size(first_blowup[2][1])]));
+def sloc2 = primdecGTZ(slocus(first_blowup[2][2][size(first_blowup[2][2])]));
+def sloc3 = primdecGTZ(slocus(first_blowup[2][3][size(first_blowup[2][3])]));
+
+def subst1 = delete(first_blowup[2][1],size(first_blowup[2][1]));
+def subst2 = delete(first_blowup[2][2],size(first_blowup[2][2]));
+def subst3 = delete(first_blowup[2][3],size(first_blowup[2][3]));
+
+first_blowup;

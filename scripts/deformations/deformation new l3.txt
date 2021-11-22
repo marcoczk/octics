@@ -1,0 +1,28 @@
+def triple_line_deg = u2-x*y*(x+y-a);
+
+def three_lines = primdecGTZ(slocus(triple_line_deg));
+
+def three_lines_id = std(intersect(three_lines[1][2],three_lines[2][2],three_lines[3][2]));
+
+def res = blow_up(triple_line_deg,three_lines_id,u);
+
+def aff1 = elim_all(subst(res[2][1],a,1));
+primdecGTZ(slocus(ideal(aff1[3],aff1[4])));
+
+def aff2 = elim_all(subst(res[2][2],a,1));
+primdecGTZ(slocus(ideal(aff2[4])));
+
+def aff3 = elim_all(subst(res[2][3],a,1));
+
+def aff4 = elim_all(subst(res[2][4],a,1));
+
+
+def aff1d = elim_all(subst(res[2][1],a,0));
+primdecGTZ(slocus(ideal(aff1[3],aff1[4])));
+
+def aff2d = elim_all(subst(res[2][2],a,0));
+primdecGTZ(slocus(ideal(aff2[4])));
+
+def aff3d = elim_all(subst(res[2][3],a,0));
+
+def aff4d = elim_all(subst(res[2][4],a,0));

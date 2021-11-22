@@ -1,0 +1,32 @@
+//ideal defining smooth blowup of u2-xyz along x=y=0 line and later along two disconnected lines
+
+ideal xy_line = xy2,x2y,ux2,uy2,u3,x3z,y3z;
+ideal yz_line = subst(xy_line,x,p(1),z,x,p(1),z);
+ideal xz_line = subst(xy_line,y,p(1),z,y,p(1),z);
+
+
+//example of a asymmetric blowup of u2-xyz along x=y=0 line
+//(last argument is the ideal against which we will saturate everything)
+//result is a nested list,
+//first list contains the ideal defining the blowup in globl coordinates
+//second list contains ideals defining all affine pieces
+blow_up(u2-xyz,ideal(xy2,x2y,ux2,uy2,u3,x3z,y3z),u);
+
+
+//ideal defining smooth blowup of u2-xyzt along x=y=0 plane followed by
+//a symmetric blowup along two disconected subvarieties isomorphic to u2-xyz
+ideal xy_plane =uy2,ux2,uxy,xy2t,x2yt,xy2z,x2yz,y3zt,x3zt;
+
+ideal xz_plane = subst(xy_plane,y,p(1),z,y,p(1),z);
+ideal xt_plane = subst(xy_plane,y,p(1),t,y,p(1),t);
+ideal yz_plane = subst(xy_plane,x,p(1),z,x,p(1),z);
+ideal yt_plane = subst(xy_plane,x,p(1),t,x,p(1),t);
+ideal zt_plane = subst(yt_plane,y,p(1),z,y,p(1),z);
+
+ideal sum_of_planes = std(xy_plane + xz_plane + xt_plane + yz_plane + yt_plane + zt_plane);
+blow_up(u2-xyzt,sum_of_planes,u)
+
+//blowup of u2-xyzt along sum_of_planes is smooth,
+//however above there is a single irreducible variety, thus it is not a crepant resolution
+//this can be checked by running:
+// primdecGTZ(std(blow_up(u2-xyzt,sum_of_planes,u)[1]+ideal(u,x,y,z,t)));

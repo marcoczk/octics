@@ -1,0 +1,86 @@
+//equation of 4 planes that give p04 point when "w" approaches 0
+def p04 = u^2-x*y*z*(x+y+z+w);
+
+// ps(I) is a shorthand for primdecGTZ(slocus(I))
+def p04_sloc = ps(p04);
+
+// the first and the fifth line in primary decomposition of slocus are disjoint
+def two_lines = std(intersect(p04_sloc[1][1],p04_sloc[5][1]));
+// we simplify the ideal
+two_lines[4] = xy;
+
+//blowing up all 6 lines at once produces unwanted singularities, we blow up two disjoint lines first
+def first_res = blow_up(p04,two_lines,u);
+
+//the first two affine pieces contain 2 lines in slocus
+//the third and fourth piece each contain a single line in slocus
+//the fifth piece is smooth
+
+def aff1 = first_res[2][1];
+def aff2 = first_res[2][2];
+def aff3 = first_res[2][3];
+def aff4 = first_res[2][4];
+
+aff1 = delete(aff1,1);aff1 = delete(aff1,1);aff1 = delete(aff1,1);
+aff2 = delete(aff2,1);aff2 = delete(aff2,1);aff2 = delete(aff2,1);
+aff3 = delete(aff3,1);aff3 = delete(aff3,1);
+aff4 = delete(aff4,1);aff4 = delete(aff4,1);
+
+def sloc1 = ps(first_res[2][1]);
+def sloc2 = ps(first_res[2][2]);
+def sloc3 = ps(first_res[2][3]);
+def sloc4 = ps(first_res[2][4]);
+
+def sloc1 = ps(aff1);
+def sloc2 = ps(aff2);
+def sloc3 = ps(aff3);
+def sloc4 = ps(aff4);
+
+//we want to have every line in its global coordinates, the method homogenize(..) homogenizes equations
+def lines = list(
+    homogenize(sloc1[1][1],ideal(p(1..5)),p(1)),
+    homogenize(sloc1[2][1],ideal(p(1..5)),p(1)),
+    homogenize(sloc2[1][1],ideal(p(1..5)),p(2)),
+    homogenize(sloc2[2][1],ideal(p(1..5)),p(2)),
+    homogenize(sloc3[1][1],ideal(p(1..5)),p(3)),
+    homogenize(sloc4[1][1],ideal(p(1..5)),p(4)));
+
+def four_lines = intersect(lines[1],lines[2],lines[3],lines[4],lines[5],lines[6]);
+def two_lines' = intersect(lines[5],lines[6]);
+//ideal of the intersection is homogenous at each generator, but generators have different projective degrees, this needs to be fixed
+four_lines = intersect(four_lines,ideal(p(1..5))^2);
+two_lines' = intersect(two_lines',ideal(p(1..5))^2);
+
+def two_blowups = std(subst(four_lines,p(1),two_lines[1],p(2),two_lines[2],p(3),two_lines[3],p(4),two_lines[4],p(5),two_lines[5])*two_lines);
+def two_blowups = std(subst(two_lines',p(1),two_lines[1],p(2),two_lines[2],p(3),two_lines[3],p(4),two_lines[4],p(5),two_lines[5])*two_lines);
+
+//we compute the composition of the first blow up and the blow up along the four lines defined above
+def final = blow_up_glob(p04,two_blowups,u);
+
+//rename p(i) to w(i) before blowing up
+aff3 = swap_pw(aff3,5);
+
+//there is only one line in slocus
+def one_line' = ps(aff3)[1][1];
+def second_res = blow_up(aff3,one_line',u);
+
+
+//first three affine pieces are smooth over w=0
+//the fourth one has two lines in slocus for w=0
+def aff4' = elim_all_but(second_res[2][4],w);
+//first nine generators of the ideal are of the form: variable = f(other variables)
+ps(subst(ideal(aff4'[10],aff4'[11],aff4'[12]),w,0));
+
+//the fifth one also has two lines (but with imaginary coefficients)
+def aff5' = elim_all_but(second_res[2][5],w);
+ps(subst(aff5'[11],w,0));
+
+
+
+
+
+
+
+def pk = swap_pk(aff4',size(one_line'));
+def rr = blow_up_glob(pk,ideal(z,k(6)),u);
+def t1 = elim_all(std(subst(rr,p(1),1,w,0)));
