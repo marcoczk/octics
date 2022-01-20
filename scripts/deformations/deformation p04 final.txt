@@ -54,6 +54,38 @@ two_lines' = intersect(two_lines',ideal(p(1..5))^2);
 def two_blowups = std(subst(four_lines,p(1),two_lines[1],p(2),two_lines[2],p(3),two_lines[3],p(4),two_lines[4],p(5),two_lines[5])*two_lines);
 def two_blowups = std(subst(two_lines',p(1),two_lines[1],p(2),two_lines[2],p(3),two_lines[3],p(4),two_lines[4],p(5),two_lines[5])*two_lines);
 
+
+ideal two_blowups=0;
+two_blowups[1]=y^4*z^2+3*y^3*z^3+3*y^3*z^2*w+3*y^2*z^4+6*y^2*z^3*w+3*y^2*z^2*w^2+y*z^5+3*y*z^4*w+3*y*z^3*w^2+y*z^2*w^3;
+two_blowups[2]=y^5*z+3*y^4*z^2+3*y^4*z*w+3*y^3*z^3+6*y^3*z^2*w+3*y^3*z*w^2+y^2*z^4+3*y^2*z^3*w+3*y^2*z^2*w^2+y^2*z*w^3;
+two_blowups[3]=x*y^2*z^3+2*x*y*z^4+2*x*y*z^3*w+x*z^5+2*x*z^4*w+x*z^3*w^2+y^3*z^3+3*y^2*z^4+3*y^2*z^3*w+3*y*z^5+6*y*z^4*w+3*y*z^3*w^2+z^6+3*z^5*w+3*z^4*w^2+z^3*w^3;
+two_blowups[4]=x*y^3*z^2+2*x*y^2*z^3+2*x*y^2*z^2*w+x*y*z^4+2*x*y*z^3*w+x*y*z^2*w^2+y^4*z^2+3*y^3*z^3+3*y^3*z^2*w+3*y^2*z^4+6*y^2*z^3*w+3*y^2*z^2*w^2+y*z^5+3*y*z^4*w+3*y*z^3*w^2+y*z^2*w^3;
+two_blowups[5]=x*y^4*z+2*x*y^3*z^2+2*x*y^3*z*w+x*y^2*z^3+2*x*y^2*z^2*w+x*y^2*z*w^2+y^5*z+3*y^4*z^2+3*y^4*z*w+3*y^3*z^3+6*y^3*z^2*w+3*y^3*z*w^2+y^2*z^4+3*y^2*z^3*w+3*y^2*z^2*w^2+y^2*z*w^3;
+two_blowups[6]=x*y^5+2*x*y^4*z+2*x*y^4*w+x*y^3*z^2+2*x*y^3*z*w+x*y^3*w^2+y^6+3*y^5*z+3*y^5*w+3*y^4*z^2+6*y^4*z*w+3*y^4*w^2+y^3*z^3+3*y^3*z^2*w+3*y^3*z*w^2+y^3*w^3;
+two_blowups[7]=x^2*y*z^3+x^2*z^4+x^2*z^3*w-y^3*z^3-3*y^2*z^4-3*y^2*z^3*w-3*y*z^5-6*y*z^4*w-3*y*z^3*w^2-z^6-3*z^5*w-3*z^4*w^2-z^3*w^3;
+two_blowups[8]=x^2*y^2*z^2+x^2*y*z^3+x^2*y*z^2*w-y^4*z^2-3*y^3*z^3-3*y^3*z^2*w-3*y^2*z^4-6*y^2*z^3*w-3*y^2*z^2*w^2-y*z^5-3*y*z^4*w-3*y*z^3*w^2-y*z^2*w^3;
+two_blowups[9]=x^2*y^3*z+x^2*y^2*z^2+x^2*y^2*z*w-y^5*z-3*y^4*z^2-3*y^4*z*w-3*y^3*z^3-6*y^3*z^2*w-3*y^3*z*w^2-y^2*z^4-3*y^2*z^3*w-3*y^2*z^2*w^2-y^2*z*w^3;
+two_blowups[10]=x^2*y^4+x^2*y^3*z+x^2*y^3*w-y^6-3*y^5*z-3*y^5*w-3*y^4*z^2-6*y^4*z*w-3*y^4*w^2-y^3*z^3-3*y^3*z^2*w-3*y^3*z*w^2-y^3*w^3;
+two_blowups[11]=x^3*z^3-x*y^2*z^3-2*x*y*z^4-2*x*y*z^3*w-x*z^5-2*x*z^4*w-x*z^3*w^2;
+two_blowups[12]=x^3*y*z^2-x*y^3*z^2-2*x*y^2*z^3-2*x*y^2*z^2*w-x*y*z^4-2*x*y*z^3*w-x*y*z^2*w^2;
+two_blowups[13]=x^3*y^2*z-x*y^4*z-2*x*y^3*z^2-2*x*y^3*z*w-x*y^2*z^3-2*x*y^2*z^2*w-x*y^2*z*w^2;
+two_blowups[14]=x^3*y^3+x^2*y^4+x^2*y^3*z+x^2*y^3*w;
+two_blowups[15]=u*y^2*z^2+2*u*y*z^3+2*u*y*z^2*w+u*z^4+2*u*z^3*w+u*z^2*w^2;
+two_blowups[16]=u*y^3*z+2*u*y^2*z^2+2*u*y^2*z*w+u*y*z^3+2*u*y*z^2*w+u*y*z*w^2;
+two_blowups[17]=u*y^4+2*u*y^3*z+2*u*y^3*w+u*y^2*z^2+2*u*y^2*z*w+u*y^2*w^2;
+two_blowups[18]=u*x*y*z^2+u*x*z^3+u*x*z^2*w;
+two_blowups[19]=u*x*y^2*z+u*x*y*z^2+u*x*y*z*w;
+two_blowups[20]=u*x*y^3+u*x*y^2*z+u*x*y^2*w;
+two_blowups[21]=u*x^2*z^2-u*y^2*z^2-2*u*y*z^3-2*u*y*z^2*w-u*z^4-2*u*z^3*w-u*z^2*w^2;
+two_blowups[22]=u*x^2*y*z+u*x*y^2*z+u*x*y*z^2+u*x*y*z*w;
+two_blowups[23]=u*x^2*y^2+u*x*y^3+u*x*y^2*z+u*x*y^2*w;
+two_blowups[24]=u^2*y*z+u^2*z^2+u^2*z*w;
+two_blowups[25]=u^2*y^2+u^2*y*z+u^2*y*w;
+two_blowups[26]=u^2*x*z;
+two_blowups[27]=u^2*x*y;
+two_blowups[28]=u^3;
+
+
 //we compute the composition of the first blow up and the blow up along the four lines defined above
 def final = blow_up_glob(p04,two_blowups,u);
 
@@ -74,11 +106,6 @@ ps(subst(ideal(aff4'[10],aff4'[11],aff4'[12]),w,0));
 //the fifth one also has two lines (but with imaginary coefficients)
 def aff5' = elim_all_but(second_res[2][5],w);
 ps(subst(aff5'[11],w,0));
-
-
-
-
-
 
 
 def pk = swap_pk(aff4',size(one_line'));

@@ -1,29 +1,44 @@
 proc get_incidence(matrix arr){
-    def subsets = list(list(1,2,3,4),list(1,2,3,5),list(1,2,3,6),list(1,2,3,7),list(1,2,3,8),list(1,2,4,5),list(1,2,4,6),list(1,2,4,7),list(1,2,4,8),list(1,2,5,6),list(1,2,5,7),list(1,2,5,8),list(1,2,6,7),list(1,2,6,8),list(1,2,7,8),list(1,3,4,5),list(1,3,4,6),list(1,3,4,7),list(1,3,4,8),list(1,3,5,6),list(1,3,5,7),list(1,3,5,8),list(1,3,6,7),list(1,3,6,8),list(1,3,7,8),list(1,4,5,6),list(1,4,5,7),list(1,4,5,8),list(1,4,6,7),list(1,4,6,8),list(1,4,7,8),list(1,5,6,7),list(1,5,6,8),list(1,5,7,8),list(1,6,7,8),list(2,3,4,5),list(2,3,4,6),list(2,3,4,7),list(2,3,4,8),list(2,3,5,6),list(2,3,5,7),list(2,3,5,8),list(2,3,6,7),list(2,3,6,8),list(2,3,7,8),list(2,4,5,6),list(2,4,5,7),list(2,4,5,8),list(2,4,6,7),list(2,4,6,8),list(2,4,7,8),list(2,5,6,7),list(2,5,6,8),list(2,5,7,8),list(2,6,7,8),list(3,4,5,6),list(3,4,5,7),list(3,4,5,8),list(3,4,6,7),list(3,4,6,8),list(3,4,7,8),list(3,5,6,7),list(3,5,6,8),list(3,5,7,8),list(3,6,7,8),list(4,5,6,7),list(4,5,6,8),list(4,5,7,8),list(4,6,7,8),list(5,6,7,8));
+    def four_subsets = list(list(1,2,3,4),list(1,2,3,5),list(1,2,3,6),list(1,2,3,7),list(1,2,3,8),list(1,2,4,5),list(1,2,4,6),list(1,2,4,7),list(1,2,4,8),list(1,2,5,6),list(1,2,5,7),list(1,2,5,8),list(1,2,6,7),list(1,2,6,8),list(1,2,7,8),list(1,3,4,5),list(1,3,4,6),list(1,3,4,7),list(1,3,4,8),list(1,3,5,6),list(1,3,5,7),list(1,3,5,8),list(1,3,6,7),list(1,3,6,8),list(1,3,7,8),list(1,4,5,6),list(1,4,5,7),list(1,4,5,8),list(1,4,6,7),list(1,4,6,8),list(1,4,7,8),list(1,5,6,7),list(1,5,6,8),list(1,5,7,8),list(1,6,7,8),list(2,3,4,5),list(2,3,4,6),list(2,3,4,7),list(2,3,4,8),list(2,3,5,6),list(2,3,5,7),list(2,3,5,8),list(2,3,6,7),list(2,3,6,8),list(2,3,7,8),list(2,4,5,6),list(2,4,5,7),list(2,4,5,8),list(2,4,6,7),list(2,4,6,8),list(2,4,7,8),list(2,5,6,7),list(2,5,6,8),list(2,5,7,8),list(2,6,7,8),list(3,4,5,6),list(3,4,5,7),list(3,4,5,8),list(3,4,6,7),list(3,4,6,8),list(3,4,7,8),list(3,5,6,7),list(3,5,6,8),list(3,5,7,8),list(3,6,7,8),list(4,5,6,7),list(4,5,6,8),list(4,5,7,8),list(4,6,7,8),list(5,6,7,8));
     def output = list();
     ideal plane = 0;
     int i = 0;
     int j = 0;
-    for (i=1 ; i<=size(subsets) ; i=i+1){
+    for (i=1 ; i<=size(four_subsets) ; i=i+1){
         plane = 0;
         for (j=1 ; j<=4 ; j=j+1){
-            plane = ideal(plane + ideal(arr[subsets[i][j],1]*x+arr[subsets[i][j],2]*y+arr[subsets[i][j],3]*z+arr[subsets[i][j],4]*t));
+            plane = ideal(plane + ideal(arr[four_subsets[i][j],1]*x+arr[four_subsets[i][j],2]*y+arr[four_subsets[i][j],3]*z+arr[four_subsets[i][j],4]*t));
         }
         if(not id_equal(std(elim_all(plane)),std(ideal(x,y,z,t)))){
-            output = output + list(subsets[i]);
+            output = output + list(four_subsets[i]);
         }
     }
     return(output);
 };
 
-proc is_in(list elems,int elem){
+proc is_in(list elems,poly elem){
     for (int i=1 ; i<=size(elems) ; i=i+1){
         if(elem == elems[i]){return(1);}
     }
     return(0);
 };
 
-proc find_l3(list incidence){
+proc is_in_list(list list_of_lists, list the_list){
+    for (int i=1 ; i<=size(list_of_lists) ; i=i+1){
+        if(list_equal(list_of_lists[i],the_list)){return(1);}
+    }
+    return(0);
+};
+
+proc is_distinct(list elems, poly elem){
+    for (int i=1 ; i<=size(elems) ; i=i+1){
+        if(id_equal(std(intersect(elems[i],elem)),std(elem))){return(0);}
+    }
+    return(1);
+};
+
+proc find_l3(matrix arr){
+    list incidence = get_incidence(arr);
     def output = list();
     int i = 0;
     int j = 0;
@@ -43,9 +58,10 @@ proc find_l3(list incidence){
     return(output);
 };
 
-proc find_p4(list incidence){
-    def triples = find_l3(incidence);
-    def fives_list = find_p5(incidence);
+proc find_p4(matrix arr){
+    list incidence = get_incidence(arr);
+    def triples = find_l3(arr);
+    def fives_list = find_p5(arr);
     def all_fives = fives_list[1]+fives_list[2]+fives_list[3];
     def all_fours = list();
     def p41_list = list();
@@ -86,8 +102,9 @@ proc find_p4(list incidence){
     return(list(p40_list)+list(p41_list));
 };
 
-proc find_p5(list incidence){
-    def triples = find_l3(incidence);
+proc find_p5(matrix arr){
+    list incidence = get_incidence(arr);
+    def triples = find_l3(arr);
     def all_fives = list();
     def p52_list = list();;
     def p51_list = list();
@@ -130,8 +147,127 @@ proc find_p5(list incidence){
     return(list(p50_list)+list(p51_list)+list(p52_list));
 };
 
+proc mat_subst(matrix mat,poly variable,poly new_value){
+    matrix output[8][4];
+    int i=0;
+    int j=0;
+    for(i=1 ; i<=8 ; i=i+1){
+        for(j=1 ; j<=4 ; j=j+1){
+            output[i,j] = subst(mat[i,j],variable,new_value);
+        }
+    }
+    return(output);
+};
+
+proc special_vals(matrix arr){
+    def four_subsets = list(list(1,2,3,4),list(1,2,3,5),list(1,2,3,6),list(1,2,3,7),list(1,2,3,8),list(1,2,4,5),list(1,2,4,6),list(1,2,4,7),list(1,2,4,8),list(1,2,5,6),list(1,2,5,7),list(1,2,5,8),list(1,2,6,7),list(1,2,6,8),list(1,2,7,8),list(1,3,4,5),list(1,3,4,6),list(1,3,4,7),list(1,3,4,8),list(1,3,5,6),list(1,3,5,7),list(1,3,5,8),list(1,3,6,7),list(1,3,6,8),list(1,3,7,8),list(1,4,5,6),list(1,4,5,7),list(1,4,5,8),list(1,4,6,7),list(1,4,6,8),list(1,4,7,8),list(1,5,6,7),list(1,5,6,8),list(1,5,7,8),list(1,6,7,8),list(2,3,4,5),list(2,3,4,6),list(2,3,4,7),list(2,3,4,8),list(2,3,5,6),list(2,3,5,7),list(2,3,5,8),list(2,3,6,7),list(2,3,6,8),list(2,3,7,8),list(2,4,5,6),list(2,4,5,7),list(2,4,5,8),list(2,4,6,7),list(2,4,6,8),list(2,4,7,8),list(2,5,6,7),list(2,5,6,8),list(2,5,7,8),list(2,6,7,8),list(3,4,5,6),list(3,4,5,7),list(3,4,5,8),list(3,4,6,7),list(3,4,6,8),list(3,4,7,8),list(3,5,6,7),list(3,5,6,8),list(3,5,7,8),list(3,6,7,8),list(4,5,6,7),list(4,5,6,8),list(4,5,7,8),list(4,6,7,8),list(5,6,7,8));
+    def output = list();
+    def minors = wedge(arr,4);
+    def s_val = 0*x;
+    for(int i=1 ; i<=size(four_subsets)  ; i=i+1){
+        s_val = std(subst(minors[i,1],A,x,B,y))[1];
+        if(deg(s_val)>1){i=i+1;continue;}
+        if(size(coeffs(s_val,x))>=2 or size(coeffs(s_val,y))>=2){
+            if(not is_in(output,s_val)){output=output+list(s_val);}
+        }
+    }
+    return(output);
+};
+
+proc find_subst_for_special_vals(poly val){
+    if(size(coeffs(val,x))==1){return(list(B,0));}
+    if(size(coeffs(val,y))==1){return(list(A,0));}
+    return(list(subst(val[1],x,A,y,B),-subst(val[2],x,A,y,B)));
+};
+
+proc all_subst(matrix arr){
+    list s_vals = special_vals(arr);
+    list output = list();
+    for(int i=1 ; i<=size(s_vals)  ; i=i+1){
+        output = output + list(find_subst_for_special_vals(s_vals[i]));
+    }
+    return(output);
+};
+
+proc mat_rows_to_eq(matrix arr,list rows,poly substitution){
+    poly output = 1;
+    list output_elems = list();
+    poly eq = 0;
+    matrix submat[size(rows)][4];
+    
+    int i=0;
+    int j=0;
+    for(i=1 ; i<=size(rows)  ; i=i+1){
+        for(j=1 ; j<=4 ; j=j+1){
+            submat[i,j] = arr[rows[i],j];
+        }
+    }
+    
+    if(not(substitution==x)){submat = mat_subst(submat,A,1);}
+    else{submat = mat_subst(submat,B,1);}
+    
+    print(submat);
+    print(gauss_row(submat));
+    
+    for(i=1 ; i<=size(rows)  ; i=i+1){
+        eq = arr[rows[i],1]*x + arr[rows[i],2]*y + arr[rows[i],3]*z + arr[rows[i],4]*t;
+        output = output*eq; 
+        output_elems = output_elems + list(eq);
+    }
+    return(list(output)+list(output_elems));
+};
 
 
+proc new_incidences(matrix old_arr, poly s_val){
+    list subst_val = find_subst_for_special_vals(s_val);
+    matrix new_arr = mat_subst(old_arr,subst_val[1],subst_val[2]);
+    list old_inciedence = get_incidence(old_arr);
+    list new_inciedence = get_incidence(new_arr);
+    int i=1;
+    for(i=1 ; i<=size(new_inciedence) ; i=i+1){
+        if(!is_in_list(old_inciedence,new_inciedence[i])){print(new_inciedence[i]);print("XXXXXXXXXXX");}
+    }
+};
+new_incidences(mat99,y);
+
+
+proc new_points_and_lines(matrix old_arr, poly s_val){
+    list subst_val = find_subst_for_special_vals(s_val);
+    matrix new_arr = mat_subst(old_arr,subst_val[1],subst_val[2]);
+    list old_inciedence = get_incidence(old_arr);
+    list new_inciedence = get_incidence(new_arr);
+    
+    list old_l3 = find_l3(old_arr);
+    list old_p4 = find_p4(old_arr);
+    list old_p5 = find_p5(old_arr);
+    
+    list new_l3 = find_l3(new_arr);
+    list new_p4 = find_p4(new_arr);
+    list new_p5 = find_p5(new_arr);
+    
+    list new_l3_not_in_old = list();
+    list new_p4_not_in_old = list(list(),list());
+    list new_p5_not_in_old = list(list(),list(),list());
+    
+    int i=0;
+    int j=0;
+    
+    for(i=1 ; i<=size(new_l3) ; i=i+1){
+        if(!is_in_list(old_l3,new_l3[i])){new_l3_not_in_old = new_l3_not_in_old + list(new_l3[i]);}
+    }
+    
+    for(i=1 ; i<=2 ; i=i+1){
+        for(j=1 ; j<=size(new_p4[i]) ; j=j+1){
+            if(!is_in_list(old_p4[i],new_p4[i][j])){new_p4_not_in_old[i] = new_p4_not_in_old[i] + list(new_p4[i][j]);}
+        }
+    }
+    for(i=1 ; i<=3 ; i=i+1){
+        for(j=1 ; j<=size(new_p5[i]) ; j=j+1){
+            if(!is_in_list(old_p5[i],new_p5[i][j])){new_p5_not_in_old[i] = new_p5_not_in_old[i] + list(new_p5[i][j]);}
+        }
+    }
+    return(list(new_l3_not_in_old,new_p4_not_in_old,new_p5_not_in_old));
+};
 
 def arr1=t*x*y*z*(t + x)*(t + z)*(x + y)*(y + z);
 matrix mat1[8][4]=[
@@ -253,6 +389,10 @@ matrix mat245[8][4]=[
 0,1,1,1,
 1,1,1,0,
 1,-1,1,1];
+
+
+//---------------------------------------------------------
+
 
 def arr2=t*x*y*z*(t + z)*(x + y)*(y + z)*(A*x + B*t);
 matrix mat2[8][4]=[
@@ -715,4 +855,3 @@ matrix mat250[8][4]=[
 1,0,1,1,
 1,1,1,0,
 A,B,-A,A];
-
