@@ -1,0 +1,60 @@
+def aff3_0 = subst(aff3,w,0);
+def aff4_0 = subst(aff4,w,0);
+
+ps(aff3_0);
+ps(aff4_0);
+
+
+ps(u44_0);
+//dwa node'y bo w_5^2 + 1 sie rozklada
+//osobliwosc jest poza wszystkimi prostymi ktore sie pozniej rozdmuchuje
+//osobliwosc jest nad u=x=y=z=0
+
+def sing = ps(u44_0)[1][1];
+
+//wymiar calego kawalka dla w=0
+dim(std(u44_0));
+
+//node znajduje się na kazdej plaszczyznie np. (x,y), (x+y,y+z)
+proc is_sing_in(ideal id){
+    def inters = elim_all(id+u44_0);
+    return(elim_all(inters+sing));
+};
+
+proc is_plane_sing(ideal id){
+    def id_out = list(elim_hard(u11_0 + id));
+    id_out = id_out + list(elim_hard(u12_0 + id));
+    id_out = id_out + list(elim_hard(u13_0 + id));
+    id_out = id_out + list(elim_hard(u14_0 + id));
+    id_out = id_out + list(elim_hard(u21_0 + id));
+    id_out = id_out + list(elim_hard(u22_0 + id));
+    id_out = id_out + list(elim_hard(u23_0 + id));
+    id_out = id_out + list(elim_hard(u24_0 + id));
+    id_out = id_out + list(elim_hard(u31_0 + id));
+    id_out = id_out + list(elim_hard(u32_0 + id));
+    id_out = id_out + list(elim_hard(u33_0 + id));
+    id_out = id_out + list(elim_hard(u34_0 + id));
+    id_out = id_out + list(elim_hard(u41_0 + id));
+    id_out = id_out + list(elim_hard(u42_0 + id));
+    id_out = id_out + list(elim_hard(u43_0 + id));
+    id_out = id_out + list(elim_hard(u44_0 + id));
+    return(id_out);
+};
+    
+//czesc plaszczyzn jest osobliwa
+is_plane_sing(ideal(y,z));
+is_plane_sing(ideal(y,z+x));
+is_plane_sing(ideal(z,x+y));
+is_plane_sing(ideal(x,y+z));
+
+
+
+
+//wymiar spada o jeden dla ograniczenia sie do dowolnej prosty i mamy nadal jedna skladowa
+dim(std(u34_0+ideal(x,y)));
+
+ps(u34_0);
+
+
+
+

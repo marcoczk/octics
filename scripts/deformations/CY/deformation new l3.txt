@@ -1,0 +1,36 @@
+def triple_line_deg = u2-x*y*(x+y-w);
+
+def three_lines = primdecGTZ(slocus(triple_line_deg));
+
+def three_lines_id = std(intersect(three_lines[1][2],three_lines[2][2],three_lines[3][2]));
+
+def res = blow_up(triple_line_deg,three_lines_id,u);
+
+ps(elim_hard(subst(res[2][1],w,1)));
+ps(elim_hard(subst(res[2][2],w,1)));
+ps(elim_hard(subst(res[2][3],w,1)));
+ps(elim_hard(subst(res[2][4],w,1)));
+
+ps(elim_hard(subst(res[2][1],w,0)));
+ps(elim_hard(subst(res[2][2],w,0)));
+ps(elim_hard(subst(res[2][3],w,0)));
+ps(elim_hard(subst(res[2][4],w,0)));
+
+elim_all(subst(res[2][4],w,0)); // <-- singular
+
+def one_line = three_lines[1][1];
+
+def res2 = blow_up(triple_line_deg,one_line,u);
+
+def u1 = swap_pw(res2[2][1],3);
+def u2 = swap_pw(res2[2][2],3);
+def u3 = swap_pw(res2[2][3],3);
+
+def sloc1 = ideal(y-w,w(3),w(2));
+def sloc2 = ideal(x-w,w(3),w(1));
+
+def resu1 = blow_up(u1,sloc1,u);
+def resu2 = blow_up(u2,sloc2,u);
+
+elim_all(subst(resu2[2][3],w,0)); // <-- singular
+elim_all(subst(resu1[2][3],w,0)); // <-- singular

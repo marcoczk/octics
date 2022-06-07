@@ -1,0 +1,134 @@
+proc cc(ideal fun,poly cover){
+    return(primdecGTZ(subst(fun,cover,0)));
+};
+proc nn(ideal fun,poly cover){
+    return(print(cover)+"^2 - "+ppl(cc(fun,cover)));
+};
+
+elim_hard(subst(r11[2][2],w,0));
+
+def f = u^2 - x*z*(y+1)*(x-y+z)*(y-z)*(y+z+1)*(2*y+1)*(x-w*y+z);
+//            1 2   3      4      5      6       7        8
+//------------------------------------------
+//blowup B of the fivefold point (x,y,z,u) -- 12458
+
+def s1 = ideal(x*p(2)-y,x*p(3)-z,x^2*p(4)-u);
+def a1 = elim_all(sat(ideal(f+s1),x)[1]);
+
+def s2 = ideal(y*p(1)-x,y*p(3)-z,y^2*p(4)-u);
+def a2 = elim_all(sat(ideal(f+s2),y)[1]);
+
+def s3 = ideal(z*p(1)-x,z*p(2)-y,z^2*p(4)-u);
+def a3 = elim_all(sat(ideal(f+s3),z)[1]);
+
+def f1 = subst(a1[4],p(1),x,p(2),y,p(3),z,p(4),u);
+def f2 = subst(a2[4],p(1),x,p(2),y,p(3),z,p(4),u);
+def f3 = subst(a3[4],p(1),x,p(2),y,p(3),z,p(4),u);
+
+//f1 = u^2 - (y*w-z-1)*z*(y-z)*(y-z-1)*(x*y+x*z+1)*(x*y+1)*(2*x*y+1)*x;
+//f2 = u^2 - z*(z-1)*(x+z-1)*||x+z-w||*(y*z+y+1)*y*(y+1)*(2*y+1)*x;
+//           2   5       4       8         6     A   3      7    1  
+//f3 = u^2 - z*(y*z+1)*(y*z+z+1)*(2*y*z+1)*(y-1)*(x-y+1)*(x-y*w+1)*x;
+
+//------------------------------------------
+//blowup B2 of a triple line (z,y+1,u) -- 236 in the second chart of B 
+
+def r2_ = blow_up(f2,ideal(z,y+1,u),u);
+
+def a2_1 = r2_[2][1];
+def f2_1 = subst(elim_hard(a2_1),p(2),y,p(3),u);
+
+def a2_2 = r2_[2][2];
+def f2_2 = subst(elim_hard(a2_2),p(1),z,p(3),u);
+
+//f2_1 = u^2 - z*(z-1)*(x+z-1)*(x+z-w)*(y*z-1)*(y*z+y-1)*(2*y*z-1)*y*x
+//             B   5      4       8       A       6          7     3 1
+//f2_2 = u^2 - z*(y*z+1)*(y*z+z-1)*(x+y*z+z-1)*(x+y*z+z-w)*y*(y+1)*(2*y+1)*x
+//             2    6        5          4           8      A   B      7    1  
+
+
+// 3 points of interest on the triple line 128 at w=0:  128A, 128B, 1278
+
+def f2_2_simple = u^2 - z*(x+y*z+z-w)*y*(y+1)*(2*y+1)*x;
+//                      2      8      A   B      7    1    
+// planes not meeting: AB A7 B7
+
+
+def g1 = u^2 - z*(x+y*z+z-w)*y*x;
+//             2      8      A 1  
+
+def g2 = u^2 - z*(x+y*z+z-w)*(y+1)*x;
+//             2      8        B   1  
+
+def g3 = u^2 - z*(x+y*z+z-w)*(2*y+1)*x;
+//             2      8         7    1  
+
+
+//blowup of g1 at two double lines: 12 and 8A
+
+ideal two_lines1;
+two_lines1[1]=y*z;
+two_lines1[2]=x*z+z^2-z*w;
+two_lines1[3]=x*y;
+two_lines1[4]=x^2+x*z-x*w;
+two_lines1[5]=u;
+
+def g1_ = blow_up(g1,two_lines1,u);
+
+def g1_1 = elim_hard(g1_[2][1]);
+def l1_1 = ps(g1_1)[1][1];
+def g1_1_ = blow_up(g1_1,l1_1,u);
+
+
+def g1_2 = elim_hard(g1_[2][2]);
+def l1_2 = intersect(ps(g1_2)[1][1],ps(g1_2)[2][1]);
+def g1_2_ = blow_up(g1_2,l1_2,u);
+
+def g1_3 = elim_hard(g1_[2][3]);
+def l1_3 = ps(g1_3)[1][1];
+def g1_3_ = blow_up(g1_3,l1_3,u);
+
+def g1_4 = elim_hard(g1_[2][4]);
+def l1_4 = ps(g1_4)[1][1];
+def g1_4_ = blow_up(g1_4,l1_4,u);
+
+
+
+
+proc get_incidence(list arr){
+    def four_subsets = list(list(1,2,3,4),list(1,2,3,5),list(1,2,3,6),list(1,2,3,7),list(1,2,3,8),list(1,2,4,5),list(1,2,4,6),list(1,2,4,7),list(1,2,4,8),list(1,2,5,6),list(1,2,5,7),list(1,2,5,8),list(1,2,6,7),list(1,2,6,8),list(1,2,7,8),list(1,3,4,5),list(1,3,4,6),list(1,3,4,7),list(1,3,4,8),list(1,3,5,6),list(1,3,5,7),list(1,3,5,8),list(1,3,6,7),list(1,3,6,8),list(1,3,7,8),list(1,4,5,6),list(1,4,5,7),list(1,4,5,8),list(1,4,6,7),list(1,4,6,8),list(1,4,7,8),list(1,5,6,7),list(1,5,6,8),list(1,5,7,8),list(1,6,7,8),list(2,3,4,5),list(2,3,4,6),list(2,3,4,7),list(2,3,4,8),list(2,3,5,6),list(2,3,5,7),list(2,3,5,8),list(2,3,6,7),list(2,3,6,8),list(2,3,7,8),list(2,4,5,6),list(2,4,5,7),list(2,4,5,8),list(2,4,6,7),list(2,4,6,8),list(2,4,7,8),list(2,5,6,7),list(2,5,6,8),list(2,5,7,8),list(2,6,7,8),list(3,4,5,6),list(3,4,5,7),list(3,4,5,8),list(3,4,6,7),list(3,4,6,8),list(3,4,7,8),list(3,5,6,7),list(3,5,6,8),list(3,5,7,8),list(3,6,7,8),list(4,5,6,7),list(4,5,6,8),list(4,5,7,8),list(4,6,7,8),list(5,6,7,8));
+    def output = list();
+    ideal plane = 0;
+    int i = 0;
+    int j = 0;
+    for (i=1 ; i<=size(four_subsets) ; i=i+1){
+        plane = 0;
+        for (j=1 ; j<=4 ; j=j+1){
+            plane = ideal(plane + ideal(arr[four_subsets[i][j]][1]+arr[four_subsets[i][j]][1]+arr[four_subsets[i][j]][1]+arr[four_subsets[i][j]][1]));
+        }
+        print("------------");
+        print(elim_all(plane));
+        if(not id_equal(std(elim_all(subst(plane,w,0))),std(1))){
+            output = output + list(four_subsets[i]);
+        }
+    }
+    return(output);
+};
+
+
+
+
+proc ff21(ideal I){
+    print(I);
+    print("-----");
+    return(std(subst(I,y,y*z-1,u,u*z,p(2),y,p(3),u)));
+}
+
+
+proc ff22(ideal I){
+    print(I);
+    print("-----");
+    return(std(subst(I,z,z*y+z,u,u*y+u,p(1),z,p(3),u)));
+}
+
+

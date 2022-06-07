@@ -1,0 +1,17 @@
+def pd = u^2 - x*y*z*(x+y+z)*(x+y+w); //5xp3 -> p25
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def bd = bcs(pd,ideal(x,y,u),ideal(u),"v");
+def sd1 = delete(bd[2][1],3);
+def sd2 = delete(bd[2][2],3);
+
+def bd1 = bcs(bd[3][1],ideal(z,v(2)+1,v(3)),ideal(u),"q");
+def bd2 = bcs(bd[3][2],ideal(z,v(1)+1,v(3)),ideal(u),"q");
+
+def sd11 = delete(bd1[2][1],3)+sd1;
+def sd12 = delete(bd1[2][2],3)+sd1;
+def sd21 = delete(bd2[2][1],3)+sd2;
+def sd22 = delete(bd2[2][2],3)+sd2;
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+

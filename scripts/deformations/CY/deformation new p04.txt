@@ -1,0 +1,79 @@
+def pp = x*y*z*(x+y+z+w);
+def tt = ideal(x*z,y*z,x*(x+y+w),y*(x+y+w));
+matrix M[2][4] = tt,p(1..4);
+def bres = wedge(M,2),pp;
+def rres = blow_up(pp,tt,u);
+    
+def p04 = u^2-x*y*z*(x+y+z+w);
+
+def res = blow_up(x*y*z*(x+y+z-w),ideal(xz,yz,x*(x+y-w),y*(x+y-w)),x);
+
+def six_lines_sloc = primdecGTZ(slocus(p04));
+def two_lines = std(intersect(six_lines_sloc[3][2],six_lines_sloc[6][2]));
+//def two_lines = std(intersect(six_lines_sloc[1][2],six_lines_sloc[5][2]));
+//def six_lines = std(intersect(six_lines_sloc[1][2],six_lines_sloc[2][2],six_lines_sloc[3][2],six_lines_sloc[4][2],six_lines_sloc[5][2],six_lines_sloc[6][2]));
+//two_lines[4] = xy;
+two_lines[1] = xz;  
+two_lines[2] = yz;
+two_lines[3] = x*(x+y+w);
+two_lines[4] = y*(x+y+w);
+def res = blow_up(p04,two_lines,u);
+
+def l1 = primdecGTZ(res[1]+ideal(u));
+def l2 = primdecGTZ(rres[1]);
+
+list ll1;
+ll1[1]=l1[6];ll1[2]=l1[5];ll1[3]=l1[3];ll1[4]=l1[4];ll1[5]=l1[1];ll1[6]=l1[2];
+
+list ll2;
+ll2[1]=l2[3];ll2[2]=l2[5];ll2[3]=l2[9];ll2[4]=l2[4];ll2[5]=l2[7];ll2[6]=l2[8];
+
+def aff3 = res[2][3];
+aff3 = swap_pw(aff3,5);
+def one_line' = ps(aff3)[1][1];
+def res' = blow_up(aff3,one_line',u);
+//aff1d = res'[2][1];
+//aff1d = delete(aff1d,1); ...
+//res'[2][1..8] <- smooth, subst also smooth
+//def qwe = std(subst(one_line',p(1),two_lines[1],p(2),two_lines[2],p(3),two_lines[3],p(4),two_lines[4],p(5),two_lines[5])*two_lines);
+
+def qwe = comp_aff_blow(p04,two_lines,ps(aff3)[1][1],u,3,4);
+
+def res'' = blow_up_glob(qwe,ideal(z,k(6)*k(7)),u);
+def aff1 = std(subst(res'',p(1),1));
+def aff2 = std(subst(res'',p(2),1));
+std(subst(aff2,w(5),k(4)*u,k(1),k(5)*z,w(1),2*k(4)*k(7)*u*x*z-k(6)*k(7)*x^2*z^2,k(2),-k(5)*z+k(7)*x,w(2),2*k(4)^2*u^2-k(4)*k(6)*u*x*z,k(5),k(6)*k(7)*u-k(6)-k(7)^3*x^2*y^2,w(4),k(4)^2*u^2-k(4)*k(6)*u*x*z,u,-k(7)*x^2*y*z,k(4),-k(6)*k(7)*x*z-k(7)^2*x*y));
+aff1 = std(elim(aff1,w(5)));
+
+def tt = std(subst(aff1,w(5),k(4)*u,k(1),k(5)*z,k(2),-k(5)*z+k(7)*x,k(5),k(6)*k(7)*u-k(6)-k(7)^3*x^2*y^2,k(4),-k(6)*k(7)*x*z-k(7)^2*x*y));
+tt = std(subst(tt,z,k(7)*u*x+x-y-w));
+tt = std(elim(tt,u*w(2)*p(2)));
+
+
+//_[1]=p(7)^2*w(5)*x^3*z+p(7)*x^2-p(7)*x*z+w(5)
+//_[2]=p(6)*w(5)*x*z^2-p(7)*w(5)*x^2*z-w(5)^2*z-x+z
+//_[3]=p(6)*w(5)^2*z^2+p(7)^2*w(5)^3*x^2*z^2-p(7)^2*w(5)*x^2*z^2-p(7)*w(5)^2*z^2-p(7)*x*z+p(7)*z^2-w(5)
+//_[4]=p(6)*p(7)*x*z^3-p(6)*w(5)*z^2-p(7)^2*w(5)^2*x^2*z^2+1
+//_[5]=p(6)*p(7)*x^2*z-p(6)*p(7)*x*z^2+p(6)*w(5)*z+p(7)^2*w(5)^2*x^2*z-p(7)*w(5)*x
+//_[6]=p(6)*p(7)*x^3-p(6)*p(7)*x^2*z+p(6)*w(5)^3*z+p(6)*w(5)*x+p(7)^2*w(5)^4*x^2*z+2*p(7)^2*w(5)^2*x^3-p(7)^2*w(5)^2*x^2*z-p(7)*w(5)^3*z-2*p(7)*w(5)*x+p(7)*w(5)*z
+//_[7]=p(6)*p(7)*w(5)^2*x*z-p(6)*p(7)*x^2+p(6)*p(7)*x*z-p(6)*w(5)-2*p(7)^2*w(5)^2*x^2-p(7)*w(5)^3+p(7)*w(5)
+
+
+def w2 = elim_all(subst(res'[2][4],w,0));
+// -> std(elim(ideal(w2[10],w2[11],w2[12]),w(5)));
+ps(w2[12]);
+
+
+def w2 = elim_all(subst(res'[2][5],w,0));
+ps(w2[11]);
+ 
+ 
+ _[1]=w(4)^2*z+w(4)*x+w(4)*z-w(5)^2*x
+_[2]=p(7)*w(5)^4*x*z+p(7)*w(5)^2*x*z-w(4)*w(5)^2*z^2-w(4)*x*z-w(4)*z^2-2*w(5)^2*x*z-w(5)^2*z^2-x^2-2*x*z-z^2
+_[3]=p(7)*w(4)*x-p(7)*w(5)^2*x+w(4)*z+x+z
+_[4]=p(7)*w(4)*w(5)^2*z+p(7)*w(4)*x+p(7)*w(4)*z-p(7)*w(5)^2*x-w(5)^2*z
+_[5]=p(7)*w(4)^2-p(7)*w(4)*w(5)^2+w(5)^2
+_[6]=p(4)*x+p(4)*z+p(7)*w(4)*w(5)*z-p(7)*w(5)*x-w(5)*z
+_[7]=p(4)*w(5)-p(7)*w(4)
+_[8]=p(4)*w(4)-p(4)*w(5)^2+w(5)
+_[9]=p(4)^2-p(4)*p(7)*w(5)+p(7)

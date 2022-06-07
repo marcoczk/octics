@@ -1,0 +1,14 @@
+def new_p14 = u^2 - x*y*z*(x + y - a);
+
+def six_lines = primdecGTZ(slocus(new_p14));
+def two_lines = std(intersect(six_lines[1][2],six_lines[4][2]));
+def three_lines = std(intersect(six_lines[4][2],six_lines[5][2],six_lines[6][2]));
+def six_lines_id = std(intersect(six_lines[1][2],six_lines[2][2],six_lines[3][2],six_lines[4][2],six_lines[5][2],six_lines[6][2]));
+
+def res = blow_up(new_p14,six_lines_id,u);
+
+//a=1 => smooth
+
+primdecGTZ(slocus(elim_all(subst(res[2][2],w,0))));
+primdecGTZ(slocus(elim_all(subst(res[2][3],w,0))));
+primdecGTZ(slocus(elim_all(subst(res[2][5],w,0))));

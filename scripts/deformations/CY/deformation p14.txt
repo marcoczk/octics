@@ -1,0 +1,45 @@
+def p14 = u^2 - x*y*z*(x+y-w);
+//def p14 = u^2 - x*y*z*(x+y+z*w-w);
+
+def lines=ps(p14);
+
+//def three_lines = intersect(lines[4][2],lines[5][2],lines[6][2]);
+//three_lines[2] = xy;
+//three_lines[3] = x2 - xw;
+
+def six_lines = intersect(lines[1][2],lines[2][2],lines[3][2],lines[4][2],lines[5][2],lines[6][2]);
+six_lines[3] = x2z - xzw;
+
+def two_sep = intersect(lines[1][1],lines[4][1]);
+
+//def res = blow_up(p14,three_lines,u);
+//def res = blow_up(p14,six_lines,u);
+def res = blow_up(p14,two_sep,u);
+
+def u1 = swap_pw(res[2][1],5); // smooth both in fourfold and in central fiber
+def u2 = swap_pw(res[2][2],5); // singular, only here there is a new singularity in the central fiber
+def u3 = swap_pw(res[2][3],5); // singular
+def u4 = swap_pw(res[2][4],5); // singular
+def u5 = swap_pw(res[2][5],5); // singular
+// each of the above is singular only in the 4 remaining lines
+
+// we skip some of the unnecessary generators to make blowups simpler
+def sloc2 = ideal(u,x,y-w,w(1),w(3));
+//def sloc3 = ideal(w(2)*w+x-w,u,w(5),w(4),w(1),w(2)^2-w(2));
+def sloc3 = elim_all(elim_all(slocus(u3)));
+def sloc4 = ideal(u,x,z,w(1),w(2),w(5));
+def sloc5 = ideal(u,y,z,w(1),w(3),w(4));
+
+def res2 = blow_up(u2,sloc2,u); //smooth as a fourfold, singular in central fiber along z-line
+def res3 = blow_up(u3,sloc3,u); //ugly
+def res4 = blow_up(u4,sloc4,u);
+def res5 = blow_up(u5,sloc5,u);
+
+//primdecGTZ(subst(six_lines,w,0));
+//ps(elim_hard(res2[2][5]));
+
+def aff5 = swap_pw(res2[2][5],size(res2[2][5]));
+
+ideal z_line = ideal(x,y,w(1),w(2),w(3),w(4));
+def fin = blow_up(aff5,z_line,u); // singular
+//(std(elim(fin[2][5],u*w*y*w(3)*w(4)*w(2)*x*p(1)*p(8)*p(3)))

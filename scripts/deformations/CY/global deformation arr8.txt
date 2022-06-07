@@ -1,0 +1,178 @@
+proc cc(ideal fun,poly cover){
+    return(primdecGTZ(subst(fun,cover,0)));
+};
+proc nn(ideal fun,poly cover){
+    return(print(cover)+"^2 - "+ppl(cc(fun,cover)));
+};
+
+def f = u^2 - x*z*(y+1)*(x-y+z)*(y-z)*(y+z+1)*(2*y+1)*(x-w*y+z);
+
+//------------------------------------------
+//blowup B of the fivefold point (x,y,z,u)
+
+def s1 = ideal(x*p(2)-y,x*p(3)-z,x^2*p(4)-u);
+def a1 = elim_all(sat(ideal(f+s1),x)[1]);
+
+def s2 = ideal(y*p(1)-x,y*p(3)-z,y^2*p(4)-u);
+def a2 = elim_all(sat(ideal(f+s2),y)[1]);
+
+def s3 = ideal(z*p(1)-x,z*p(2)-y,z^2*p(4)-u);
+def a3 = elim_all(sat(ideal(f+s3),z)[1]);
+
+def f1 = subst(a1[4],p(1),x,p(2),y,p(3),z,p(4),u);
+def f2 = subst(a2[4],p(1),x,p(2),y,p(3),z,p(4),u);
+def f3 = subst(a3[4],p(1),x,p(2),y,p(3),z,p(4),u);
+
+//f1 = u^2 - (y*w-z-1)*z*(y-z)*(y-z-1)*(x*y+x*z+1)*(x*y+1)*(2*x*y+1)*x;
+//f2 = u^2 - z*(z-1)*(x+z-1)*||x+z-w||*(y*z+y+1)*y*(y+1)*(2*y+1)*x;
+//           2   5       4       8         6     A   3      7    1  
+//f3 = u^2 - z*(y*z+1)*(y*z+z+1)*(2*y*z+1)*(y-1)*(x-y+1)*(x-y*w+1)*x;
+//------------------------------------------
+//blowup B2 of a triple line (x,z-1,u) in the second chart of B
+
+def r2_ = blow_up(f2,ideal(x,z-1,u),u);
+
+def a2_1 = r2_[2][1];
+def f2_1 = subst(elim_hard(a2_1),p(2),z,p(3),u);
+
+def a2_2 = r2_[2][2];
+def f2_2 = subst(elim_hard(a2_2),p(1),x,p(3),u);
+
+//f2_1 = u^2 - z*(z+1)*(x*z+1)*(x*z+x-w+1)*(x*y*z+2*y+1)*y*(y+1)*(2*y+1)*x
+//             5   4      2         8           6        A   3      7    B
+//f2_2 = u^2 - z*(z-1)*||x*z-x+z-w||*(y*z+y+1)*y*(y+1)*(2*y+1)*x*(x+1)
+//             2   B         8           6     A   3      7    1   4
+
+//------------------------------------------
+//blowup B2_2 of a triple line (z,y+1,u) in the second chart of B2
+
+def r2_2_ = blow_up(f2_2,ideal(z,y+1,u),u);
+
+def a2_2_1 = r2_2_[2][1];
+def f2_2_1 = subst(elim_hard(a2_2_1),p(2),y+1,p(3),u);
+
+def a2_2_2 = r2_2_[2][2];
+def f2_2_2 = subst(elim_hard(a2_2_2),p(1),z,p(3),u);
+
+//f2_2_1 = u^2 - z*(z-1)*(x*z-x+z-w)*(y*z+z-1)*(y*z+y+z)*(2*y*z+2*z-1)*(y+1)*x*(x+1)
+//               
+//f2_2_2 = u^2 - z*(y*z+1)*(y*z+z-1)*(x*y*z+x*z-x+y*z+z-w)*y*(y+1)*(2*y+1)*x*(x+1)
+
+//  x     z     yz+y+z     xz-x+z-w
+// (x,z,u) is the new triple line in f2_2_1 and f2_2_2 as w->0
+// (x,y,z,u) is the new fourfold point in f2_2_1 and f2_2_2 as w->0
+
+
+//------------------------------------------
+//blowup B2_2_1 of double lines (x,z,u) and (x,z-w,u) in the first chart of B2_2
+
+def two_lines = ideal(x,z2-zw,u);
+
+def r2_2_1_ = blow_up(f2_2_1,two_lines,u);
+
+def a2_2_1_1 = r2_2_1_[2][1];
+a2_2_1_1 = delete(a2_2_1_1,2);
+def f2_2_1_1 = subst((delete(a2_2_1_1,1)),p(3),u,p(2),q(2));
+
+def a2_2_1_2 = r2_2_1_[2][2];
+def f2_2_1_2 = subst(elim_hard(a2_2_1_2),p(1),x,p(3),u);
+
+//f2_2_1_1 = u^2 - (z-1)*(y*z+z-1)*(y*z+y+z)*(2*y*z+2*z-1)*(q(2)+x*z^2-x*z+2*z^2-z*w-z)*(y+1)
+//f2_2_1_2 = u^2 - (z-1)*(y*z+z-1)*(y*z+y+z)*(2*y*z+2*z-1)*(x*z^2-x*z+1)*(x*z^2-x*z*w+1)*(y+1)*x
+
+//(x,z,u) is the new triple line in f2_2_1 and f2_2_2 as w->0
+//(x,y,z,u) is the new fourfold point in f2_2_1 and f2_2_2 as w->0
+
+// first:      z,q(2),    x*z-x+z-w,q(2)+z^2-z        y*z+y+z,q(2)*x-z^2+z*w
+// second: x,             x*z^2-x*z*w+1               y*z+y+z
+
+
+//------------------------------------------
+//final blowups of remaining double lines in both charts of B2_2_1
+
+def fs1 = f2_2_1_1;
+fs1[1] = u^2 - (z-1)*(y*z+y+z)*(q(2)+x*z^2-x*z+2*z^2-z*w-z)*(2*y*z+2*z-1);
+
+def fs2 = u^2 - (y*z+y+z)*(x*z^2-x*z*w+1)*(2*y*z+2*z-1)*(z-1);
+
+
+def two_lines = intersect(ideal(z-1,x*w-x-1,u),ideal(z-1,2*y+1,u));
+
+def rr = blow_up(fs2,two_lines,u);
+
+def r2_2_1_2_ = blow_up_raw(f2_2_1_2,two_lines,u);
+
+def a2_2_1_1 = r2_2_1_[2][1];
+a2_2_1_1 = delete(a2_2_1_1,2);
+def f2_2_1_1 = subst((delete(a2_2_1_1,1)),p(3),u,p(2),q(2));
+
+def a2_2_1_2 = r2_2_1_[2][2];
+def f2_2_1_2 = subst(elim_hard(a2_2_1_2),p(1),x,p(3),u);
+
+//f2_2_1_1 = u^2 - (z-1)*(y*z+y+1)*(q(2)+x*z^2-x*z+2*z^2-z*w-z)*y*(y+1)*(2*y+1)
+//f2_2_1_2 = u^2 - (z-1)*(y*z+y+1)*(x*z^2-x*z+1)*(x*z^2-x*z*w+1)*y*(y+1)*(2*y+1)*x
+
+
+
+
+
+
+
+
+
+
+
+
+proc get_incidence(list arr){
+    def four_subsets = list(list(1,2,3,4),list(1,2,3,5),list(1,2,3,6),list(1,2,3,7),list(1,2,3,8),list(1,2,4,5),list(1,2,4,6),list(1,2,4,7),list(1,2,4,8),list(1,2,5,6),list(1,2,5,7),list(1,2,5,8),list(1,2,6,7),list(1,2,6,8),list(1,2,7,8),list(1,3,4,5),list(1,3,4,6),list(1,3,4,7),list(1,3,4,8),list(1,3,5,6),list(1,3,5,7),list(1,3,5,8),list(1,3,6,7),list(1,3,6,8),list(1,3,7,8),list(1,4,5,6),list(1,4,5,7),list(1,4,5,8),list(1,4,6,7),list(1,4,6,8),list(1,4,7,8),list(1,5,6,7),list(1,5,6,8),list(1,5,7,8),list(1,6,7,8),list(2,3,4,5),list(2,3,4,6),list(2,3,4,7),list(2,3,4,8),list(2,3,5,6),list(2,3,5,7),list(2,3,5,8),list(2,3,6,7),list(2,3,6,8),list(2,3,7,8),list(2,4,5,6),list(2,4,5,7),list(2,4,5,8),list(2,4,6,7),list(2,4,6,8),list(2,4,7,8),list(2,5,6,7),list(2,5,6,8),list(2,5,7,8),list(2,6,7,8),list(3,4,5,6),list(3,4,5,7),list(3,4,5,8),list(3,4,6,7),list(3,4,6,8),list(3,4,7,8),list(3,5,6,7),list(3,5,6,8),list(3,5,7,8),list(3,6,7,8),list(4,5,6,7),list(4,5,6,8),list(4,5,7,8),list(4,6,7,8),list(5,6,7,8));
+    def output = list();
+    ideal plane = 0;
+    int i = 0;
+    int j = 0;
+    for (i=1 ; i<=size(four_subsets) ; i=i+1){
+        plane = 0;
+        for (j=1 ; j<=4 ; j=j+1){
+            plane = ideal(plane + ideal(arr[four_subsets[i][j]][1]+arr[four_subsets[i][j]][1]+arr[four_subsets[i][j]][1]+arr[four_subsets[i][j]][1]));
+        }
+        print("------------");
+        print(elim_all(plane));
+        if(not id_equal(std(elim_all(subst(plane,w,0))),std(1))){
+            output = output + list(four_subsets[i]);
+        }
+    }
+    return(output);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------------------
+//blowup B1 of the triple line (z,y+1,u) in the first chart B
+
+def r1_ = blow_up(f1,ideal(z,xy+1,u),u);
+
+def a1_1 = delete(r1_[2][1],2);
+def f1_1 = delete(a1_1,1);
+f1_1 = subst(f1_1,p(3),u,p(2),q(1));
+
+def a1_2 = r1_[2][2];
+def f1_2 = a1_2[3];
+f1_2 = subst(f1_2,p(3),u,p(1),z);
+
+//f1_1 = u^2 - (y*w-z-1)*(y-z)*(y-z-1)*(x*y+x*z+1)*(2*x*y+1)*x*(q(1))
+//f1_2 = u^2 - z*(x*z+1)*(x*y*z-y+z)*(x*y*z-y+z+1)*(x*y*z-y*w+z+1)*(x*y+1)*(2*x*y+1)*x
+
+def id = ideal(x*p(2)-y*p(1),x*p(3)-z*p(1),y*p(3)-z*p(2),u*p(1)-x^2*p(4),u*p(2)-y^2*p(4),u^2*p(3)-z^2*p(4));

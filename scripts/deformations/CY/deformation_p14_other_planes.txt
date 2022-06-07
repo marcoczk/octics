@@ -1,0 +1,69 @@
+def p14 = u^2 - x*y*z*(x+y+w);
+
+def lines=ps(p14);
+
+//def two_sep = intersect(lines[2][1],lines[4][1]);
+def two_sep = intersect(lines[2][1],lines[4][1]);
+def res = blow_up(p14,two_sep,u);
+
+//change variable names from p(i) to w(i), the next blowup will introduce new variables in the form p(i)
+def u1 = swap_pw(res[2][1],5); // smooth both in fourfold and in central fiber
+def u2 = swap_pw(res[2][2],5); // singular, only here there is a new singularity in the central fiber
+def u3 = swap_pw(res[2][3],5); // singular, in remaining lines
+def u4 = swap_pw(res[2][4],5); // singular, in remaining lines
+def u5 = swap_pw(res[2][5],5); // singular, in remaining lines
+
+// we skip some of the unnecessary generators to make blowups simpler
+//def sloc2 = ideal(y+z*w-w,w(5),w(4)+w,w(1),w(3)*z-w(3)-z+1,w(3)^2-w(3));
+def sloc2 = ideal(w(4),w(3)-1,w(1));
+def sloc3 = ideal(w(5),w(4),w(1),w(2)^2-w(2));
+def sloc4 = ideal(w(1),w(2),w(5));
+def sloc5 = ideal(w(1),w(2),w(3),w(4));
+
+def res2 = blow_up(u2,sloc2,u); //smooth as a fourfold, singular in central fiber along the z-line with with extra singularity on the lines 
+def res3 = blow_up(u3,sloc3,u); //smooth
+def res4 = blow_up(u4,sloc4,u); //smooth
+def res5 = blow_up(u5,sloc5,u); //smooth
+
+ps(elim_hard(res2[2][1]));
+ps(elim_hard(res2[2][2]));
+ps(elim_hard(res2[2][3]));
+
+ps(elim_hard(res3[2][1]));
+ps(elim_hard(res3[2][2]));
+ps(elim_hard(res3[2][3]));
+ps(elim_hard(res3[2][4]));
+
+ps(elim_hard(res4[2][1]));
+ps(elim_hard(res4[2][2]));
+ps(elim_hard(res4[2][3]));
+
+ps(elim_hard(res5[2][1]));
+ps(elim_hard(res5[2][2]));
+ps(elim_hard(res5[2][3]));
+ps(elim_hard(res5[2][4]));
+
+ps(elim_hard(subst(res2[2][1],w,0)));
+ps(elim_hard(subst(res2[2][2],w,0))); // <-- singular
+ps(elim_hard(subst(res2[2][3],w,0)));
+
+ps(elim_hard(subst(res3[2][1],w,0)));
+ps(elim_hard(subst(res3[2][2],w,0)));
+ps(elim_hard(subst(res3[2][3],w,0)));
+ps(elim_hard(subst(res3[2][4],w,0)));
+
+ps(elim_hard(subst(res4[2][1],w,0)));
+ps(elim_hard(subst(res4[2][2],w,0)));
+ps(elim_hard(subst(res4[2][3],w,0)));
+
+ps(elim_hard(subst(res5[2][1],w,0)));
+ps(elim_hard(subst(res5[2][2],w,0)));
+ps(elim_hard(subst(res5[2][3],w,0)));
+ps(elim_hard(subst(res5[2][4],w,0)));
+
+elim_hard(subst(res2[2][3],w,0));
+elim_hard(subst(res2[2][3],w,0)+ideal(z-5));
+elim_hard(subst(res2[2][3],w,0)+ideal(z));
+
+def ii = ideal(x2wz - x2z - wy);
+def bb = blow_up(ii,ideal(x,y,w),x);

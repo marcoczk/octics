@@ -1,0 +1,124 @@
+def pa = u^2 - x*y*z*(x+y+w); //4xp3 -> p14
+def pb = u^2 - x*y*z*(x+y+z*w); //p04 -> p14
+//def pc = u^2 - x*y*z*(x+y+z*w)*(x+z+w); //p04 + 3xl2 + 3xl2 -> p25
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def ba = bcs(pa,ideal(x,y,u),ideal(u),"s");
+def sa1 = delete(ba[2][1],3);
+def sa2 = delete(ba[2][2],3);
+
+def ba1 =     bcs(ba[3][1],ideal(z,s(2),s(3)),ideal(s(3)),"r");
+def sa11 = delete(ba1[2][1],3) + sa1;
+def sa12 = delete(ba1[2][2],3) + sa1;
+
+def ba2 =     bcs(ba[3][2],ideal(z,s(1),s(3)),ideal(s(3)),"r");
+def sa21 = delete(ba2[2][1],3) + sa2;
+def sa22 = delete(ba2[2][2],3) + sa2;
+
+pa11 = ba1[3][1];
+pa12 = ba1[3][2];
+pa21 = ba2[3][1];
+pa22 = ba2[3][2];
+
+//--------------------------------------------------------
+
+def ba11f = bsl(pa11,ideal(r(3)));
+def ba12f = bsl(pa12,ideal(r(3)));
+def ba21f = bsl(pa21,ideal(r(3)));
+def ba22f = bsl(pa22,ideal(r(3))); //all smooth
+
+def pa11f = elim_all(ba11f[2][3]) + sa11;
+def pa12f = elim_all(ba12f[2][3]) + sa12;
+def pa21f = elim_all(ba21f[2][3]) + sa21;
+def pa22f = elim_all(ba22f[2][3]) + sa22;
+ 
+def qa11f = elim_hard(subst(ba11f[2][3],w,0)); //u2 - x(yz+1)
+def qa12f = elim_hard(subst(ba12f[2][3],w,0)); //x2y - zw
+def qa21f = elim_hard(subst(ba21f[2][3],w,0)); //u2 - x(yz+1)
+def qa22f = elim_hard(subst(ba22f[2][3],w,0)); //x2y - zw
+//double line with a single pinch point
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
+def bb = bcs(pb,ideal(x,y,u),ideal(u),"s");
+def sb1 = delete(bb[2][1],3);
+def sb2 = delete(bb[2][2],3);
+
+def bb1 =     bcs(bb[3][1],ideal(x,z,s(3)),ideal(s(3)),"r");
+def sb11 = delete(bb1[2][1],3) + sb1;
+def sb12 = delete(bb1[2][2],3) + sb1;
+
+def bb2 =     bcs(bb[3][2],ideal(y,z,s(3)),ideal(s(3)),"r");
+def sb21 = delete(bb2[2][1],3) + sb2;
+def sb22 = delete(bb2[2][2],3) + sb2;
+
+def pb11 = bb1[3][1];
+def pb12 = bb1[3][2];
+def pb21 = bb2[3][1];
+def pb22 = bb2[3][2];
+
+//--------------------------------------------------------
+
+def pb11f = bsl(pb11,ideal(r(3))); //smooth 
+def pb12f = bsl(pb12,ideal(r(3))); //[1]: x^2-(x+1)y
+def pb21f = bsl(pb21,ideal(r(3))); //smooth
+def pb22f = bsl(pb22,ideal(r(3))); //[1]: x^2-(x+1)y
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+def spc = ps(pc);
+
+def bc =       blow_up(pc,ideal(x,y,u),ideal(u));
+def pc1 =        swap_(bc[2][1][3],3,"p","s");
+def pc2 =        swap_(bc[2][2][3],3,"p","s");
+def sc1 = swap_(delete(bc[2][1],3),3,"p","s");
+def sc2 = swap_(delete(bc[2][2],3),3,"p","s");
+
+//--------------------------------------------------------
+
+//def bc1 =      blow_up(pc1,ideal(x,z,s(3)),ideal(s(3)));
+//def pc11 =       swap_(bc1[2][1][3],3,"p","r");
+//def pc12 =       swap_(bc1[2][2][3],3,"p","r");
+//def sc11 =swap_(delete(bc1[2][1],3),3,"p","r")+sb1;
+//def sc12 =swap_(delete(bc1[2][2],3),3,"p","r")+sb1;
+//    
+//def bc2 =      blow_up(pc2,ideal(y,z,s(3)),ideal(s(3)));
+//def pc21 =       swap_(bc2[2][1][3],3,"p","r");
+//def pc22 =       swap_(bc2[2][2][3],3,"p","r");
+//def sc21 =swap_(delete(bc2[2][1],3),3,"p","r")+sb2;
+//def sc22 =swap_(delete(bc2[2][2],3),3,"p","r")+sb2;
+//
+//
+////--------------------------------------------------------
+//
+//def bc =       blow_up(pc,intersect(spc[6][1],spc[7][1]),ideal(u));
+//def pc1 =  swap_(ideal(bc[2][1][2],bc1[2][1][3]),3,"p","s");
+//def pc2 =        swap_(bc[2][3][3],3,"p","s");
+//def sc1 =        swap_(bc[2][1][1],3,"p","s");
+//def sc2 = swap_(delete(bc[2][3],3),3,"p","s");
+//
+////def bc =       blow_up(pc,ideal(x,y,u),ideal(u));
+////def pc1 =        swap_(bc[2][1][3],3,"p","s");
+////def pc2 =        swap_(bc[2][2][3],3,"p","s");
+////def sc1 = swap_(delete(bc[2][1],3),3,"p","s");
+////def sc2 = swap_(delete(bc[2][2],3),3,"p","s");
+//
+//def spc1 = ps(pc1);
+//def spc2 = ps(pc2);
+////--------------------------------------------------------
+//
+//def bc1 =      blow_up(pc1,intersect(spc1[1][1],spc1[3][1]),ideal(s(3)));
+//def pc11 = swap_(ideal(bc1[2][1][2],bc1[2][1][3]),3,"p","r");
+//def pc12 = swap_(ideal(bc1[2][3][2],bc1[2][3][3]),3,"p","r");
+//def sc11 =       swap_(bc1[2][1][1],3,"p","r")+sb1;
+//def sc12 =       swap_(bc1[2][3][1],3,"p","r")+sb1;
+//
+//def bc2 =      blow_up(pc2,intersect(spc2[4][1],spc2[5][1]),ideal(s(3)));
+//def pc21 = swap_(ideal(bc2[2][1][2],bc2[2][1][3]),3,"p","r");
+//def pc22 = swap_(ideal(bc2[2][3][2],bc2[2][3][3]),3,"p","r");
+//def sc21 =       swap_(bc2[2][1][1],3,"p","r")+sb1;
+//def sc22 =       swap_(bc2[2][3][1],3,"p","r")+sb1;
+//
+////--------------------------------------------------------
+//
