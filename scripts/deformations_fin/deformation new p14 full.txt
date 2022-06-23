@@ -1,0 +1,18 @@
+def p = u^2 - x*y*z*(x+y+z*w+w);
+def r = blow_up(p,ideal(u,x,y),u);
+
+def a2 = swap_pw(r[2][2],3);
+def a3 = swap_pw(r[2][3],3);
+
+// a2 ~~ w(1)^2-w(2)^2*y*z-w(2)*y*z-w(2)*z^2*w-w(2)*z*w
+// a3 ~~ w(1)^2-w(3)^2*x*z-w(3)*x*z-w(3)*z^2*w-w(3)*z*w
+
+def a2s = u^2 - x*z*(x*y+y+z*w+w);
+def a3s = u^2 - y*z*(x*y+x+z*w+w);
+
+def r2_2 = blow_up(a2s,ideal(u,x,y+z*w+w),u);
+def a2_2_2s = u^2-z*(x*y-x*z*w-x*w-y);
+def a2_2_3s = u^2-x*z*(x*y-1); //constant in the fourfold
+
+def r3_2_2 = blow_up(a2_2_2s,ideal(u,z,x*y-x*w-y),u);
+def a3_2_2_2s = ideal(u^2*z - x*y + x*z*w + x*w + y)ps;

@@ -1,0 +1,54 @@
+//p04 -> p05
+def pa = u^2 - x*y*z*(x+y+z)*(x+2*y+3*z+w); //4xp3 -> p14
+
+def paa = u^2 - x*y*z*(x+y+z)*(x+2*y+3*z); //4xp3 -> p14
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def ba = bcsg(pa,ideal(x,y,z,u),ideal(u),"s",ideal(0));
+ba[3][1] = rm_high_pows_from_dc(ba[3][1],s(4));//all symmetric t each other
+ba[3][2] = rm_high_pows_from_dc(ba[3][2],s(4));
+ba[3][3] = rm_high_pows_from_dc(ba[3][3],s(4));
+
+def baa = bcsg(paa,ideal(x,y,z,u),ideal(u),"s",ideal(0));
+baa[3][1] = rm_high_pows_from_dc(baa[3][1],s(4));//all symmetric t each other
+baa[3][2] = rm_high_pows_from_dc(baa[3][2],s(4));
+baa[3][3] = rm_high_pows_from_dc(baa[3][3],s(4));
+baa[3][1] = s(4)^2 - x*(s(3))*(s(2)+s(3)+1)*(2*s(2)+3*s(3)+1)*(s(2))
+
+def ba1  = bcsg(ba[3][1],ideal(s(2),s(3),s(4)),ideal(s(4)),"r",ba[4][1]);
+def ba11 = bcsg(ba1[3][1],ideal(s(2)+1,r(2),r(3)),ideal(r(3)),"q",ba1[4][1]);
+
+def ba111 = bcsg(ba11[3][1],ideal(q(2),2*s(2)*x+x+w,q(3)),ideal(q(3)),"v",ba11[4][1]);
+
+ba111[3][1]=3*s(2)^3*q(2)^2*x+3*s(2)^2*q(2)^2*x+5*s(2)^2*q(2)*x+4*s(2)*q(2)*x+s(2)*q(2)*w+2*s(2)*x+q(2)*v(3)^2+x+w;
+def sl = psp(ba111[3][1])[1];
+def ba1111 = blow_up(ba111[3][1],ideal(sl[2],sl[3],sl[4]),ideal(v(3)));
+
+def sl2 = elim_all(psp(ba111[3][2])[1]);
+def ba1112 = blow_up(ba111[3][2],sl2,ideal(v(3)));
+def ba112 = bsl(ba11[3][2],ideal(q(3)));
+
+def ba11  = bcsg(ba1[3][1],ideal(s(2)+1,r(2),r(3)),ideal(r(3)),"q");
+def sa111 = ba11[4][1] + sa11;
+def sa112 = ba11[4][2] + sa11;
+
+//--------------------------------------------------------
+
+def ba11f = bsl(pa11,ideal(r(3)));
+def ba12f = bsl(pa12,ideal(r(3)));
+def ba21f = bsl(pa21,ideal(r(3)));
+def ba22f = bsl(pa22,ideal(r(3))); //all smooth
+
+def pa11f = elim_all(ba11f[2][3]) + sa11;
+def pa12f = elim_all(ba12f[2][3]) + sa12;
+def pa21f = elim_all(ba21f[2][3]) + sa21;
+def pa22f = elim_all(ba22f[2][3]) + sa22;
+ 
+def qa11f = elim_hard(subst(ba11f[2][3],w,0)); //u2 - x(yz+1)
+def qa12f = elim_hard(subst(ba12f[2][3],w,0)); //x2y - zw
+def qa21f = elim_hard(subst(ba21f[2][3],w,0)); //u2 - x(yz+1)
+def qa22f = elim_hard(subst(ba22f[2][3],w,0)); //x2y - zw
+//double line with a single pinch point
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

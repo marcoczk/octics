@@ -1,0 +1,20 @@
+//p04 -> p05
+def pa = u^2 - x*y*z*(x+y+z)*(x+2*y+3*z+w);
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def ba = bcsg(pa,ideal(x,y,z,u),u,"s",ideal(0));
+ba[3][1] = rm_high_pows_from_dc(ba[3][1],s(4));//all symmetric t each other
+ba[3][2] = rm_high_pows_from_dc(ba[3][2],s(4));
+ba[3][3] = rm_high_pows_from_dc(ba[3][3],s(4));
+
+
+//no global events, we can pick plane with w and any two other to see what happens locally
+ba[3][1]=s(4)^2 - (2*s(2)*x+3*s(3)*x+x+w)*(s(3))*(s(2));
+//                            w              z      y
+
+def ba1 = bcsg(ba[3][1],ideal(s(2),s(3),s(4)),s(4),"r",ba[4][1]);
+
+def ba11 = bsl(ba1[3][1],r(3));//only ba11[2][3] is singular at w=0
+def ba12 = bsl(ba1[3][2],r(3));//only ba12[2][3] is singular at w=0
+//iso to: u2y - x(3yz+2z+1) - w

@@ -1,0 +1,29 @@
+p25 <- p14+p14 ❌, p15 ✔, p05 ✔,p04 (❌)
+p15 <- p04 (❌), p05 ✔, 2x p14 ❌
+p05 <- p04 ✔, new ❌?
+p14 <- p04 ✔, new ✔ 
+p04 <- new ✔ 
+l3  <- new ✔, p03 ✔
+ 
+p15, p25 <- new - nie wierzymy 
+
+p04->p15 - prawie
+p04->p25 - prawie to samo co p04->p15 tylko w dwóch różnych miejscach
+p14->p15 - najpierw prosta potrójna
+p14->p25 - trochę jak p14->p15 razem z p04->p15
+
+p04->p14 - po rozdmuchanie poczwórnego to samo co 3x l2 -> l3.
+p05->p15 - po rozdmuchanie pięciokrotnego to samo co 3x p03 -> p14.
+p15->p25 - po rozdmuchanie pięciokrotnego to samo co 3x p03 -> p14.
+p05->p25 - po rozdmuchanie pięciokrotnego to samo co w p15->p25 tylko w dwóch różnych miejscach.
+
+p04->p05 - linia na przecięciu dwóch powierzchni z 4-ma pinch pointami.
+
+Po rozdmuchaniu punktu czterokrotnego, 6 prostych, którego przez niego przechodzi staje się rozłączne (zarówno we włóknie generycznym jak i osobliwym). We włóknie generycznym Piąta płaszczyzna, która zmierza do punktu czterokrotnego, przecina się generycznie z pozostałymi 4-ma płaszczyznami. We włóknie osobliwym piąta płaszczyzna rozpada się na dwie przecinające się powierzchnie. Pierwsza z nich siedzi w całości nad rozdmuchanym wcześniej punktem p04. Natomiast druga przecina się generycznie z pozostałymi 4-ma płaszczyznami nad p04 (sytuacja taka sama jak przy rozdmuchaniu punktu p05). 
+
+Podsumowując; po rozdmuchaniu punktu p04, w każdym z elementów rodziny, w każdym punkcie, przecinają co najwyżej 3 płaszczyzny. Dzięki temu możemy zawęzić się jedynie do "ruchomej" płaszczyzny i dowolnych dwóch innych (żadna z pozostałych czterech nie jest wyróżniona).
+
+Jedyna osobliwość we włóknie centralnym to prosta, na przecięciu dwóch powierzchni pochodzących z "ruchomej" płaszczyzny. Inne proste, które ją przecinają, rozdmuchujemy naraz, co dodaje jej pinch-pointy.
+
+
+new p04: file:///C:/Users/48508/Desktop/CY/degeneracje/points_deforms_2v2.txt

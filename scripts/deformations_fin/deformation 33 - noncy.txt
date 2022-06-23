@@ -1,0 +1,34 @@
+def noncy = u^2 - (x-z+t)*t*(w(1)*x-w(1)*y-w(1)*z+w(2)*t)*z*(y+z)*y*(x+y)*x;
+//x -> x+y+z
+def noncy = u^2 - t*(x+y+t)*(w(1)*x+w(2)*t)*z*(y+z)*(x+y+z)*(x+2*y+z)*y;
+//w = w(2)/w(1)
+def noncy = u^2 - t*(x+y+t)*(x+w*t)*z*(y+z)*(x+y+z)*(x+2*y+z)*y;
+//w=0 -> sixfold point = (x,y,z)
+//set t=1, and remove planes that do not make sixfold point
+def noncy = u^2 - z*(y+z)*(x+y+z)*(x+2*y+z)*y*(x+w);
+
+def b = bcs(noncy,ideal(x,y,z,u),ideal(u),"v");
+b[3][1] = v(4)^2-(x+w)*(x)*(v(3))*(v(2)+v(3))*(v(2)+v(3)+1)*(2*v(2)+v(3)+1)*(v(2));
+b[3][2] = v(4)^2-(v(1)*y+w)*(y)*(v(3))*(v(3)+1)*(v(1)+v(3)+1)*(v(1)+v(3)+2);
+b[3][3] = v(4)^2-(v(1)*z+w)*(z)*(v(2))*(v(2)+1)*(v(1)+v(2)+1)*(v(1)+2*v(2)+1);
+
+def s1 = delete(b[2][1],4);
+def s2 = delete(b[2][2],4);
+def s3 = delete(b[2][3],4);
+
+def b3 = bcs(b[3][3],ideal(v(1)+1,v(2),v(4)),ideal(v(4)),"q");
+
+def s31 = delete(b3[2][1],3)+s3;
+def s32 = delete(b3[2][2],3)+s3;
+
+def b31 = bcs(b3[3][1],ideal(v(1)+1,q(2)+1,q(3)),ideal(q(3)),"s");
+def s311 = delete(b31[2][1],3)+s31;
+def s312 = delete(b31[2][2],3)+s31;
+
+def b311 = bcs(b31[3][1],ideal(v(1),s(2),s(3)),ideal(s(3)),"r");
+def s3111 = delete(b311[2][1],3)+s311;
+def s3112 = delete(b311[2][2],3)+s311;
+
+def b3111 = bcs(b311[3][1],ideal(v(1)*z+w,r(2),r(3)),ideal(r(3)),"w");
+def s31111 = delete(b3111[2][1],3)+s3111;
+def s31112 = delete(b3111[2][2],3)+s3111;

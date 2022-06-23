@@ -1,0 +1,18 @@
+def l3 = u^2 - x*y*(x+y+w*z);
+
+def line = ideal(u,x,y);
+def res = blow_up(l3,line,u);
+
+def u1 = swap_pw(res[2][1],3);
+def u2 = swap_pw(res[2][2],3); //singularity at "pinch point"
+def u3 = swap_pw(res[2][3],3);
+
+def sloc2 = ideal(w(1),w(3),x+z*w);
+def sloc3 = ideal(w(1),w(2),y+z*w);
+
+def res2 = blow_up(u2,sloc2,u);
+def res3 = blow_up(u3,sloc3,u);
+
+
+ps(elim_hard(res2[1]));
+ps(elim_hard(res3[1]));

@@ -147,7 +147,7 @@ elim_all(slocus(u2));
 
 
 proc elim_hard(ideal I_in){
-  ideal I_out = I_in;
+  ideal I_out = std(I_in);
   int eliminated = 0;
   int i=0;
   int j=0;
@@ -382,18 +382,17 @@ proc bcs(ideal I, ideal B, ideal U, string s){
 };
 
 
-proc bcsg(ideal I, ideal B, ideal U, string s){
+proc bcsg(ideal I, ideal B, ideal U, string s, ideal prev_blow_subst){
     int i;
     
     list blow_up_ = bcs(I,B,U,s);
     
     blow_up_ = blow_up_ + list(list());
     for (i=1 ; i<=size(blow_up_[2]) ; i=i+1){
-        blow_up_[4] = blow_up_[4]+list(delete(blow_up_[2][i],size(B)));
+        blow_up_[4] = blow_up_[4]+list(delete(blow_up_[2][i],size(B))+prev_blow_subst);
     }
     return(blow_up_);
 };
-bcsg(ba1[3][1],ideal(s(2)+1,r(2),r(3)),ideal(r(3)),"q");
 
 proc bsl(ideal I,ideal U){
     return(blow_up(I,elim_all(slocus(I)),U));
@@ -429,7 +428,7 @@ proc rm_high_pows_from_dc(ideal I, poly f){
     def pg_ = primdecGTZ(subst(I,f,0));
     poly out = 1;
     for (i=1 ; i<=size(pg_) ; i=i+1){
-        if((deg(pg_[i][1])==1) and (size(pg_[i][1])==1)){
+        if((pg_[i][1][1]==pg_[i][2][1]) and (size(pg_[i][1])==1)){
             out = out*pg_[i][1][1];
         }
     }

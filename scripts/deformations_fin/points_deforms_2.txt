@@ -1,0 +1,97 @@
+def pd = u^2 - x*y*z*(x+y+z)*(x+y+w); //p04 + 4xp3 -> p25
+def pd = u^2 - z*(x-y)*(x+2*y)*(x+y+z)*(x+y+w);
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def bd = bcs(pd,ideal(x,y,z,u),ideal(u),"v");
+def sd1 = delete(bd[2][1],4);
+def sd2 = delete(bd[2][2],4);
+def sd3 = delete(bd[2][3],4);
+bd[3][1] = v(4)^2 - (v(2)*x+x+w)*(v(3))*(v(2)+v(3)+1)*(v(2));      // removed sqaure
+bd[3][2] = v(4)^2 - (v(1)*y+y+w)*(v(3))*(v(1)+v(3)+1)*(v(1));      // removed sqaure
+bd[3][3] = v(4)^2 - (v(1)*z+v(2)*z+w)*(v(2))*(v(1)+v(2)+1)*(v(1)); // removed sqaure
+
+def bd1 = bcs(bd[3][1],ideal(v(2)+1,v(3),v(4)),ideal(v(4)),"q");
+def bd2 = bcs(bd[3][2],ideal(v(1)+1,v(3),v(4)),ideal(v(4)),"q");
+def bd3 = bcs(bd[3][3],ideal(v(1),v(2),v(4)),  ideal(v(4)),"q");
+
+def sd11 = delete(bd1[2][1],3)+sd1;
+def sd12 = delete(bd1[2][2],3)+sd1;
+def sd21 = delete(bd2[2][1],3)+sd2;
+def sd22 = delete(bd2[2][2],3)+sd2;
+def sd31 = delete(bd3[2][1],3)+sd3;
+def sd32 = delete(bd3[2][2],3)+sd3;
+
+def bd11 = bcs(bd1[3][1],ideal(x+w,v(2),q(3)),       ideal(q(3)),"s");
+def bd12 = bcs(bd1[3][2],ideal(x+w,q(1)*v(3)-1,q(3)),ideal(q(3)),"s");
+def bd21 = bcs(bd2[3][1],ideal(y+w,v(1),q(3)),       ideal(q(3)),"s");
+def bd22 = bcs(bd2[3][2],ideal(y+w,q(1)*v(3)-1,q(3)),ideal(q(3)),"s");
+def bd31 = bcs(bd3[3][1],ideal(v(1)*z+w,q(2),q(3)),  ideal(q(3)),"s");
+def bd32 = bcs(bd3[3][2],ideal(v(2)*z+w,q(1),q(3)),  ideal(q(3)),"s");
+
+//all smooth at generic
+def bd111 = bsl(bd11[3][1],ideal(s(3))); // length:3 
+def bd112 = bsl(bd11[3][2],ideal(s(3))); // length:3 
+def bd121 = bsl(bd12[3][1],ideal(s(3))); // length:4 
+def bd122 = bsl(bd12[3][2],ideal(s(3))); // length:3 
+def bd211 = bsl(bd21[3][1],ideal(s(3))); // length:3 
+def bd212 = bsl(bd21[3][2],ideal(s(3))); // length:3 
+def bd221 = bsl(bd22[3][1],ideal(s(3))); // length:4 
+def bd222 = bsl(bd22[3][2],ideal(s(3))); // length:3 
+def bd311 = bsl(bd31[3][1],ideal(s(3))); // length:5 
+def bd312 = bsl(bd31[3][2],ideal(s(3))); // length:3 
+def bd321 = bsl(bd32[3][1],ideal(s(3))); // length:5 
+def bd322 = bsl(bd32[3][2],ideal(s(3))); // length:3  
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+def sd112  = delete(bd11[2][2],3) + sd11;
+def sd121  = bd12[2][1][1] + sd12;
+def sd122  = delete(bd12[2][2],3) + sd12;
+def sd212  = delete(bd21[2][2],3) + sd21;
+def sd221  = bd22[2][1][1] + sd22;
+def sd222  = delete(bd22[2][2],3) + sd22;
+
+
+//def sd1123 = 
+//def sd1211 = ideal(bd121[2][1][1],bd121[2][1][2],bd121[2][1][3])+sd121;
+//def sd1221 = bd122[2][1][2] + sd122;
+//def sd2123 = 
+//def sd2211 = ideal(bd221[2][1][1],bd221[2][1][2],bd221[2][1][3])+sd221;
+//def sd2221 = bd222[2][1][2] + sd222;
+
+
+pse(subst(bd111[2][1],w,0));
+pse(subst(bd112[2][1],w,0));
+pse(subst(bd121[2][1],w,0));//< 1
+pse(subst(bd122[2][1],w,0));//< 4
+pse(subst(bd211[2][1],w,0));
+pse(subst(bd212[2][1],w,0));
+pse(subst(bd221[2][1],w,0));//< 1
+pse(subst(bd222[2][1],w,0));//< 4
+pse(subst(bd312[2][1],w,0));
+pse(subst(bd322[2][1],w,0));
+                          
+pse(subst(bd111[2][2],w,0));
+pse(subst(bd112[2][2],w,0));
+pse(subst(bd121[2][2],w,0));
+pse(subst(bd122[2][2],w,0));
+pse(subst(bd211[2][2],w,0));
+pse(subst(bd212[2][2],w,0));
+pse(subst(bd221[2][2],w,0));
+pse(subst(bd222[2][2],w,0));
+pse(subst(bd311[2][2],w,0));
+pse(subst(bd312[2][2],w,0));
+pse(subst(bd321[2][2],w,0));
+pse(subst(bd322[2][2],w,0));
+                          
+pse(subst(bd111[2][3],w,0));
+pse(subst(bd112[2][3],w,0));//< 3
+pse(subst(bd121[2][3],w,0));
+pse(subst(bd122[2][3],w,0));
+pse(subst(bd211[2][3],w,0));
+pse(subst(bd212[2][3],w,0));//< 3
+pse(subst(bd221[2][3],w,0));
+pse(subst(bd222[2][3],w,0));
+pse(subst(bd311[2][3],w,0));
+pse(subst(bd312[2][3],w,0));
+pse(subst(bd321[2][3],w,0));
+pse(subst(bd322[2][3],w,0));

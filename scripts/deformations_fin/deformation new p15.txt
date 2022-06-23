@@ -1,0 +1,49 @@
+def p15 = u^2 - x*(x+y)*y*((w-1)-x+(-w-1)*y+z)*z;
+
+def sloc = primdecGTZ(slocus(p15));
+
+def blowup_l3 = ideal(0);
+blowup_l3[1]=y^5;
+blowup_l3[2]=x*y^3;
+blowup_l3[3]=x^2*y^2+x*y^3;
+blowup_l3[4]=x^3*y+x^2*y^2;
+blowup_l3[5]=x^5+x^4*y;
+blowup_l3[6]=u*y^3;
+blowup_l3[7]=u*x*y^2;
+blowup_l3[8]=u*x^2*y+u*x*y^2;
+blowup_l3[9]=u*x^3;
+blowup_l3[10]=u^2*y^2;
+blowup_l3[11]=u^2*x*y;
+blowup_l3[12]=u^2*x^2;
+blowup_l3[13]=u^3*y;
+blowup_l3[14]=u^3*x;
+blowup_l3[15]=u^4;
+
+def res = blow_up(p15,ideal(x,y,u),u);
+def p15' = swap_pw(res[2][1],3);
+def sloc' = ps(p15');
+def two_lines' = intersect(sloc'[8][1],sloc'[9][1]);
+
+def p15'' = blow_up(p15',two_lines',u);
+
+def aff1'' = p15''[2][1];
+ideal subst1'';
+subst1''[1] = aff1''[1];
+subst1''[2] = aff1''[2];
+subst1''[3] = aff1''[3];
+subst1''[4] = aff1''[4];
+subst1''[5] = aff1''[5];
+
+aff1'' = delete(aff1'',1);
+aff1'' = delete(aff1'',1);
+aff1'' = delete(aff1'',1);
+aff1'' = delete(aff1'',1);
+aff1'' = delete(aff1'',1);
+def sloc1'' = ps(aff1'');
+def two_lines'' = intersect(sloc1''[2][1],sloc1''[3][1])+subst1'';
+
+ps(aff1'');
+
+def two_lines = intersect(sloc'[8][1],sloc'[9][1]);
+
+def seven_lines = intersect(sloc[1][2],sloc[2][2],sloc[3][2],sloc[4][2],sloc[5][2],sloc[6][2],sloc[8][2]);

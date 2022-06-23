@@ -1,0 +1,5 @@
+def p15 = u^2 - x*(x+y+a)*y*(x+y+z)*z;
+
+def sloc = ps(p15);
+
+def ten_lines = intersect(sloc[1][1],sloc[2][1],sloc[3][1],sloc[4][1],sloc[5][1],sloc[6][1],sloc[7][1],sloc[8][1],sloc[9][1],sloc[10][1]);

@@ -1,0 +1,172 @@
+def g1 = u^2 - z*(x+y*z+z-w)*y*x;
+//             2      8      A 1  
+
+def g2 = u^2 - z*(x+y*z+z-w)*(y+1)*x;
+//             2      8        B   1  
+
+def g3 = u^2 - z*(x+y*z+z-w)*(2*y+1)*x;
+//             2      8         7    1  
+
+//12 -> 1A/2A/1B/2B/17/27 -> 18/28/78/8A/8B
+
+//12 -> 2A -> 28/8A
+//12 -> 1A -> 8A/18
+//12 -> 2B -> 8B/28
+//12 -> 1B -> 8B/18
+//12 -> 27 -> 28/78
+//12 -> 17 -> 18/78
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// blowup of g1 in (x,z,u)
+def g1_ = blow_up(g1,ideal(x,z,u),u);
+
+def g1_1 = subst(elim_hard(g1_[2][1]),p(1),x,p(2),z,p(3),u);
+//def g1_1 =  u^2 - z*(x*y*z+x*z+x-w)*y;
+//                  2        8        A
+
+def g1_2 = subst(elim_hard(g1_[2][2]),p(1),x,p(2),z,p(3),u);
+//def g1_2 =  u^2 - (x*z+y*z+z-w)*y*x;
+//                        8       A 1
+
+//--------------------------------------------------------
+
+// blowup of g1_1 in (y,z,u)
+def g1_1_ = blow_up(g1_1,ideal(y,z,u),u);
+
+def g1_1_1 = subst(elim_hard(g1_1_[2][1]),p(1),y,p(2),z,p(3),u);
+//def g1_1_1 =  u^2 - z*(x*y^2*z+x*y*z+x-w);
+//                    2          8      
+
+def g1_1_2 = subst(elim_hard(g1_1_[2][2]),p(1),y,p(2),z,p(3),u);
+//def g1_1_2 =  u^2 - (x*y*z^2+x*z+x-w)*y;
+//                           8          A  
+
+//--------------------------------------------------------
+
+
+// blowup of g1_2 in (x,y,u)
+def g1_2_ = blow_up(g1_2,ideal(x,y,u),u);
+
+def g1_2_1 = subst(elim_hard(g1_2_[2][1]),p(1),x,p(2),y,p(3),u);
+//def g1_2_1 =  u^2 - (x*y*z+x*z+z-w)*y;
+//                           8        A       
+
+def g1_2_2 = subst(elim_hard(g1_2_[2][2]),p(1),x,p(2),y,p(3),u);
+//def g1_2_2 =  u^2 - (x*y*z+y*z+z-w)*x;
+//                          8         1
+
+//--------------------------------------------------------
+
+//12 -> 2A -> 28/8A
+def f111 = blow_up(g1_1_1,ps(g1_1_1)[1][1],u); //quadratic curve
+def f112 = blow_up(g1_1_2,ps(g1_1_2)[1][1],u); //pinched quadratic curve
+
+//12 -> 1A -> 8A/18
+def f121 = blow_up(g1_2_1,ps(g1_2_1)[1][1],u); //pinched quadratic curve
+def f122 = blow_up(g1_2_2,ps(g1_2_2)[1][1],u); //pinched quadratic curve
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def g2 = u^2 - z*(x+y*z+z-w)*(y+1)*x;
+//             2      8        B   1  
+
+
+// blowup of g2 in (x,z,u)
+def g2_ = blow_up(g2,ideal(x,z,u),u);
+
+def g2_1 = subst(elim_hard(g2_[2][1]),p(1),x,p(2),z,p(3),u);
+//def g3_1 = u^2 - z*(x*y*z+x*z+x-w)*(y+1);
+//                 2        8          B     
+
+def g2_2 = subst(elim_hard(g2_[2][2]),p(1),x,p(2),z,p(3),u);
+//def g3_2 = u^2 - (x*z+y*z+z-w)*(y+1)*x
+//                        8        B   1  
+
+//--------------------------------------------------------
+
+// blowup of g2_1 in (z,y+1,u)
+def g2_1_ = blow_up(g2_1,ideal(z,y+1,u),u);
+
+def g2_1_1 = subst(elim_hard(g2_1_[2][1]),p(1),z,p(2),y+1,p(3),u);
+//def g2_1_1 = u^2 - (x*y*z^2+x*z^2+x-w)*(y+1)
+//                            8            B     
+
+def g2_1_2 = subst(elim_hard(g2_1_[2][2]),p(1),z,p(2),y+1,p(3),u);
+//def g2_2 = u^2 - z*(x*y^2*z+2*x*y*z+x*z+x-w)
+//                 2               8           
+
+//--------------------------------------------------------
+
+// blowup of g2_2 in (x,y+1,u)
+def g2_2_ = blow_up(g2_2,ideal(x,y+1,u),u);
+
+def g2_2_1 = subst(elim_hard(g2_2_[2][1]),p(1),x,p(2),y+1,p(3),u);
+//def g2_2_1 = u^2 - (x*y*z+2*x*z-w)*(y+1)
+//                          8          B     
+
+def g2_2_2 = subst(elim_hard(g2_2_[2][2]),p(1),x,p(2),y+1,p(3),u);
+//def g2_2_2 = u^2 - (x*y*z+x*z+y*z+z-w)*x
+//                             8         1
+
+//--------------------------------------------------------
+
+//12 -> 2B -> 8B/28
+def f211 = blow_up(g2_1_1,ps(g2_1_1)[1][1],u); //ugly
+def f212 = blow_up(g2_1_2,ps(g2_1_2)[1][1],u); //singular piece: u2x-2xyz-xz-yz-z+w
+
+//12 -> 1B -> 8B/18
+def f221 = blow_up(g2_2_1,ps(g2_2_1)[1][1],u); //ugly
+def f222 = blow_up(g2_2_2,ps(g2_2_2)[1][1],u); //singular piece: u2x-2xyz-xz-yz-z+w
+
+
+
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// blowup of g3 in (x,z,u)
+def g3_ = blow_up(g3,ideal(x,z,u),u);
+
+def g3_1 = subst(elim_hard(g3_[2][1]),p(1),x,p(2),z,p(3),u);
+//def g3_1 = u^2 - z*(x+x*y*z+x*z-w)*(2*y+1);
+//                 2        8           7     
+
+def g3_2 = subst(elim_hard(g3_[2][2]),p(1),x,p(2),z,p(3),u);
+//def g3_2 = u^2 - (x*z+y*z+z-w)*(2*y+1)*x;
+//                        8         7    1  
+
+//--------------------------------------------------------
+
+// blowup of g3_1 in (z,2*y+1,u)
+def g3_1_ = blow_up(g3_1,ideal(z,2*y+1,u),u);
+
+def g3_1_1 = subst(elim_hard(elim(g3_1_[2][1],2*y+1)),p(1),z,p(2),2*y+1,p(3),u);
+//def g3_1_1 = u^2 - (2*x*y*z^2+x*z^2+x*z+2*x-2*w)*(2*y+1)
+//                                   8                7     
+
+def g3_1_2 = subst(elim_hard(g3_1_[2][2]),p(1),z,p(2),2*y+1,p(3),u);
+//def g3_2 = u^2 - z*(2*x*y^2*z+3*x*y*z+x*z+x-w);
+//                 2               8           
+
+//--------------------------------------------------------
+
+// blowup of g3_2 in (x,2*y+1,u)
+def g3_2_ = blow_up(g3_2,ideal(x,2*y+1,u),u);
+
+def g3_2_1 = subst(elim_hard(elim(g3_2_[2][1],2*y+1)),p(1),x,p(2),2*y+1,p(3),u);
+//def g3_2_1 = u^2 - (2*x*y*z+3*x*z+z-2*w)*(2*y+1)
+//                              8             7     
+
+def g3_2_2 = subst(elim_hard(g3_2_[2][2]),p(1),x,p(2),2*y+1,p(3),u);
+//def g3_2_2 = u^2 - (2*x*y*z+x*z+y*z+z-w)*x
+//                             8           1
+
+//--------------------------------------------------------
+
+//12 -> 27 -> 28/78
+def f311 = blow_up(g3_1_1,ps(g3_1_1)[1][1],u); //ugly
+def f312 = blow_up(g3_1_2,ps(g3_1_2)[1][1],u); //singular piece: u2x-2xyz-xz-yz-z+w
+
+//12 -> 17 -> 18/78
+def f321 = blow_up(g3_2_1,ps(g3_2_1)[1][1],u); //ugly
+def f322 = blow_up(g3_2_2,ps(g3_2_2)[1][1],u); //singular piece: u2x-2xyz-xz-yz-z+w

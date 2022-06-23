@@ -1,0 +1,277 @@
+//u^2 - z*(x+y*z+z-w)*y*(y+1)*(2*y+1)*x;
+//      2      8      A   B      7    1 
+
+
+def g1 = u^2 - z*(x+y*z+z-w)*y*x;
+//             2      8      A 1  
+
+def g2 = u^2 - z*(x+y*z+z-w)*(y+1)*x;
+//             2      8        B   1  
+
+def g3 = u^2 - z*(x+y*z+z-w)*(2*y+1)*x;
+//             2      8         7    1  
+
+
+//12 -> 1A/2A/1B/2B/17/27 -> 18/28/78/8A/8B
+
+//12 -> 2A -> 28/8A
+//12 -> 1A -> 8A/18
+
+//12 -> 2B -> 8B/28
+//12 -> 1B -> 8B/18
+
+//12 -> 27 -> 28/78
+//12 -> 17 -> 18/78
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// blowup of g1 in (x,z,u)
+def g1_ = blow_up(g1,ideal(x,z,u),u);
+
+def s1_1 = swap_(delete(g1_[2][1],3),6,"p","s");
+def g1_1 = swap_(elim_hard(g1_[2][1]),6,"p","s");
+//def g1_1 =  u^2 - z*(x*y*z+x*z+x-w)*y;
+//                  2        8        A
+
+def s1_2 = swap_(delete(g1_[2][2],3),6,"p","s");
+def g1_2 = swap_(elim_hard(g1_[2][2]),6,"p","s");
+//def g1_2 =  u^2 - (x*z+y*z+z-w)*y*x;
+//                        8       A 1
+
+//--------------------------------------------------------
+
+// blowup of g1_1 in (y,z,u)
+def g1_1_ = blow_up(g1_1,ideal(y,s(2),s(3)),s(3));
+
+def s1_1_1 = swap_(delete(g1_1_[2][1],3),6,"p","r")+s1_1;
+def g1_1_1 = swap_(elim_hard(g1_1_[2][1]),6,"p","r");
+//def g1_1_1 =  u^2 - z*(x*y^2*z+x*y*z+x-w);
+//                    2          8      
+
+def s1_1_2 = swap_(delete(g1_1_[2][2],3),6,"p","r")+s1_1;
+def g1_1_2 = swap_(elim_hard(g1_1_[2][2]),6,"p","r");
+//def g1_1_2 =  u^2 - (x*y*z^2+x*z+x-w)*y;
+//                           8          A  
+
+//--------------------------------------------------------
+
+// blowup of g1_2 in (x,y,u)
+def g1_2_ = blow_up(g1_2,ideal(s(1),y,s(3)),s(3));
+
+def s1_2_1 = swap_(delete(g1_2_[2][1],3),6,"p","r")+s1_2;
+def g1_2_1 = swap_(elim_hard(g1_2_[2][1]),6,"p","r");
+//def g1_2_1 =  u^2 - (x*y*z+x*z+z-w)*y;
+//                           8        A 
+      
+def s1_2_2 = swap_(delete(g1_2_[2][2],3),6,"p","r")+s1_2;
+def g1_2_2 = swap_(elim_hard(g1_2_[2][2]),6,"p","r");
+//def g1_2_2 =  u^2 - (x*y*z+y*z+z-w)*x;
+//                          8         1
+
+//--------------------------------------------------------
+
+//12 -> 2A -> 28/8A
+def f111 = blow_up(g1_1_1,ps(g1_1_1)[1][1],r(3)); //3:qc
+def f112 = blow_up(g1_1_2,ps(g1_1_2)[1][1],r(3)); //3:pqc
+
+//12 -> 1A -> 8A/18
+def f121 = blow_up(g1_2_1,ps(g1_2_1)[1][1],r(3)); //3:pqc
+def f122 = blow_up(g1_2_2,ps(g1_2_2)[1][1],r(3)); //3:pqc
+
+def r111 = f111[2][3]+s1_1_1;
+def r112 = f112[2][3]+s1_1_2;
+def r121 = f121[2][3]+s1_2_1;
+def r122 = f122[2][3]+s1_2_2;
+
+def q111 = subst(f111[2][3]+s1_1_1,w,0);
+def q112 = subst(f112[2][3]+s1_1_2,w,0);
+def q121 = subst(f121[2][3]+s1_2_1,w,0);
+def q122 = subst(f122[2][3]+s1_2_2,w,0);
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def g2 = u^2 - z*(x+y*z+z-w)*(y+1)*x;
+//             2      8        B   1  
+
+
+// blowup of g2 in (x,z,u)
+def g2_ = blow_up(g2,ideal(x,z,u),u);
+
+def s2_1 = swap_(delete(g2_[2][1],3),6,"p","s");
+def g2_1 = swap_(elim_hard(g2_[2][1]),6,"p","s");
+//def g3_1 = u^2 - z*(x*y*z+x*z+x-w)*(y+1);
+//                 2        8          B     
+
+def s2_2 = swap_(delete(g2_[2][2],3),6,"p","s");
+def g2_2 = swap_(elim_hard(g2_[2][2]),6,"p","s");
+//def g3_2 = u^2 - (x*z+y*z+z-w)*(y+1)*x
+//                        8        B   1  
+
+//--------------------------------------------------------
+
+// blowup of g2_1 in (z,y+1,u)
+def g2_1_ = blow_up(g2_1,ideal(y+1,s(2),s(3)),s(3));
+
+def s2_1_1 = swap_(delete(g2_1_[2][1],3),6,"p","r") + s2_1;
+def g2_1_1 = swap_(elim_hard(g2_1_[2][1]),6,"p","r");
+//def g2_1_1 = u^2 - (x*y*z^2+x*z^2+x-w)*(y+1)
+//                            8            B     
+
+def s2_1_2 = swap_(delete(g2_1_[2][2],3),6,"p","r") + s2_1;
+def g2_1_2 = swap_(elim_hard(g2_1_[2][2]),6,"p","r");
+//def g2_2 = u^2 - z*(x*y^2*z+2*x*y*z+x*z+x-w)
+//                 2               8           
+
+//--------------------------------------------------------
+
+// blowup of g2_2 in (x,y+1,u)
+def g2_2_ = blow_up(g2_2,ideal(s(1),y+1,s(3)),s(3));
+
+def s2_2_1 = swap_(delete(g2_2_[2][1],3),6,"p","r") + s2_2;
+def g2_2_1 = swap_(elim_hard(g2_2_[2][1]),6,"p","r");
+//def g2_2_1 = u^2 - (x*y*z+2*x*z-w)*(y+1)
+//                          8          B     
+
+def s2_2_2 = swap_(delete(g2_2_[2][2],3),6,"p","r") + s2_2;
+def g2_2_2 = swap_(elim_hard(g2_2_[2][2]),6,"p","r");
+//def g2_2_2 = u^2 - (x*y*z+x*z+y*z+z-w)*x
+//                             8         1
+
+//--------------------------------------------------------
+
+//12 -> 2B -> 8B/28
+def f211 = blow_up(g2_1_1,ps(g2_1_1)[1][1],r(3)); //3:qc
+def f212 = blow_up(g2_1_2,ps(g2_1_2)[1][1],r(3)); //3:qc
+
+//12 -> 1B -> 8B/18
+def f221 = blow_up(g2_2_1,ps(g2_2_1)[1][1],r(3)); //3: 3l with 1 double point 
+def f222 = blow_up(g2_2_2,ps(g2_2_2)[1][1],r(3)); //3: 3l with 1 double point
+
+def r211 = f211[2][3]+s2_1_1;
+def r212 = f212[2][3]+s2_1_2;
+def r221 = f221[2][3]+s2_2_1;
+def r222 = f222[2][3]+s2_2_2;
+
+def q211 = subst(f211[2][3]+s2_1_1,w,0);
+def q212 = subst(f212[2][3]+s2_1_2,w,0);
+def q221 = subst(f221[2][3]+s2_2_1,w,0);
+def q222 = subst(f222[2][3]+s2_2_2,w,0);
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+// blowup of g3 in (x,z,u)
+def g3_ = blow_up(g3,ideal(x,z,u),u);
+
+def s3_1 = swap_(delete(g3_[2][1],3),6,"p","s");
+def g3_1 = swap_(elim_hard(g3_[2][1]),6,"p","s");
+//def g3_1 = u^2 - z*(x+x*y*z+x*z-w)*(2*y+1);
+//                 2        8           7     
+
+def s3_2 = swap_(delete(g3_[2][2],3),6,"p","s");
+def g3_2 = swap_(elim_hard(g3_[2][2]),6,"p","s");
+//def g3_2 = u^2 - (x*z+y*z+z-w)*(2*y+1)*x;
+//                        8         7    1  
+
+//--------------------------------------------------------
+
+// blowup of g3_1 in (z,2*y+1,u)
+def g3_1_ = blow_up(g3_1,ideal(s(2),2*y+1,s(3)),s(3));
+
+def s3_1_1 = swap_(delete(g3_1_[2][1],3),6,"p","r") + s3_1;
+def g3_1_1 = swap_(elim_hard(elim(g3_1_[2][1],2*y+1)),6,"p","r");
+//def g3_1_1 = u^2 - (2*x*y*z^2+x*z^2+x*z+2*x-2*w)*(2*y+1)
+//                                   8                7     
+
+def s3_1_2 = swap_(delete(g3_1_[2][2],3),6,"p","r") + s3_1;
+def g3_1_2 = swap_(elim_hard(g3_1_[2][2]),6,"p","r");
+//def g3_2 = u^2 - z*(2*x*y^2*z+3*x*y*z+x*z+x-w);
+//                 2               8           
+
+//--------------------------------------------------------
+
+// blowup of g3_2 in (x,2*y+1,u)
+def g3_2_ = blow_up(g3_2,ideal(s(1),2*y+1,s(3)),s(3));
+
+def s3_2_1 = swap_(delete(g3_2_[2][1],3),6,"p","r") + s3_2;
+def g3_2_1 = swap_(elim_hard(elim(g3_2_[2][1],2*y+1)),6,"p","r");
+//def g3_2_1 = u^2 - (2*x*y*z+3*x*z+z-2*w)*(2*y+1)
+//                              8             7     
+
+def s3_2_2 = swap_(delete(g3_2_[2][2],3),6,"p","r") + s3_2;
+def g3_2_2 = swap_(elim_hard(g3_2_[2][2]),6,"p","r");
+//def g3_2_2 = u^2 - (2*x*y*z+x*z+y*z+z-w)*x
+//                             8           1
+
+//--------------------------------------------------------
+
+//12 -> 27 -> 28/78
+def f311 = blow_up(g3_1_1,ps(g3_1_1)[1][1],r(3)); //3: pqc
+def f312 = blow_up(g3_1_2,ps(g3_1_2)[1][1],r(3)); //3: qc
+
+//12 -> 17 -> 18/78
+def f321 = blow_up(g3_2_1,ps(g3_2_1)[1][1],r(3)); //3: pqc
+def f322 = blow_up(g3_2_2,ps(g3_2_2)[1][1],r(3)); //3: pqc
+
+def r311 = f311[2][3]+s3_1_1;
+def r312 = f312[2][3]+s3_1_2;
+def r321 = f321[2][3]+s3_2_1;
+def r322 = f322[2][3]+s3_2_2;
+
+def q311 = subst(f311[2][3]+s3_1_1,w,0);
+def q312 = subst(f312[2][3]+s3_1_2,w,0);
+def q321 = subst(f321[2][3]+s3_2_1,w,0);
+def q322 = subst(f322[2][3]+s3_2_2,w,0);
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+def q111p = ps(q111);
+def q112p = ps(q112);
+def q121p = ps(q121);
+def q122p = ps(q122);
+
+def q211p = ps(q211);
+def q212p = ps(q212);
+def q221p = ps(q221);
+def q222p = ps(q222);
+
+def q311p = ps(q311);
+def q312p = ps(q312);
+def q321p = ps(q321);
+def q322p = ps(q322);
+
+def ss111 = elim_all(elim(r111,r(3)*p(1)*s(3)*s(2)));
+def ss112 = elim_all(elim(r112,r(3)*p(1)*s(3)));
+def ss121 = elim_all(elim(r121,r(3)*p(1)*s(3)));
+def ss122 = elim_all(elim(r122,r(3)*p(1)*s(3)*s(1)));
+
+def ss211 = elim_all(elim(r211,r(3)*p(1)*s(3)*s(2)));
+def ss212 = elim_all(elim(r212,r(3)*p(1)*s(3)));
+def ss221 = elim_all(elim(r221,r(3)*p(1)*s(3)));
+def ss222 = elim_all(elim(r222,r(3)*p(1)*s(3)*s(1)));
+
+def ss311 = elim_all(elim(r311,r(3)*s(3)*p(1)));
+def ss312 = elim_all(elim(r312,r(3)*p(1)*s(3)*s(2)));
+def ss321 = elim_all(elim(r321,r(3)*p(1)*s(3)));
+def ss322 = elim_all(elim(r322,r(3)*p(1)*s(3)*s(1)));
+
+def ms111 = delete(ss111,2);
+def ms112 = delete(ss112,3);
+def ms121 = delete(ss121,3);
+def ms122 = delete(ss122,2);
+
+def r_ = elim_all_but(r222,w)[7];
+def r = subst(r_,p(2),u,r(1),x);
+def psr = pse(subst(r,w,0));
+def br = blow_up(r,psr[1][1]+ideal(w),ideal(z));
+ps(subst(br[2][1],w,0));
+ps(subst(br[2][2],w,0));
+ps(subst(br[2][3],w,0));
+ps(subst(br[2][4],w,0));
+
+proc elim_si(ideal si,int i, int k){
+    return(ideal(0));
+};
+
+proc pse(ideal I){
+    return(ps(elim_hard(I)));
+};
