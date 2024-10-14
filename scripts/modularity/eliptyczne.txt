@@ -1,0 +1,82 @@
+LIB "elim.lib";
+LIB "sing.lib";
+LIB "primdec.lib";
+LIB "ring.lib";
+LIB "teachstd.lib";
+LIB "rootsur.lib";
+LIB "numerAlg.lib";
+LIB "matrix.lib";
+
+
+//ring r=(0,a),(u,x,y,z,t,w),lp;
+//minpoly = a^2-5;
+
+def Ap = -3*(t^4 - 12*t^3 + 14*t^2 + 12*t + 1);
+def Bp = 2*(t^6 - 18*t^5 + 75*t^4 + 75*t^2 + 18*t + 1);
+def f = x^3 + Ap*x + Bp;
+
+
+def f2 = subst(f,x,x+1);
+
+proc dd(poly a2, poly a4, poly a6)
+{
+    return(-27*a6^2 + 18*a2*a4*a6 + a2^2*a4^2 - 4*a2^3*a6 - 4*a4^3);
+};
+
+proc dde(poly elipt, poly xvar)
+{
+    def coffs = coeffs(elipt,xvar);
+    return(dd(coffs[3,1],coffs[2,1],coffs[1,1]));
+};
+
+
+
+
+def A5 = subst(Ap,t,(11+5*A)/2);
+def B5 = subst(Bp,t,(11+5*A)/2);
+
+def delta5 = dd(0,A5,B5);
+    
+    
+def es = x3-5x2+5-t2;    
+    
+def f5 = x^3 + A5*x + B5;
+def f5a = subst(f5,x,x-25/2 - 11*A/2);
+
+def co = coeffs(f5a,x);
+def a25 = co[3,1];
+def a45 = ideal(co[2,1],u^2-5);
+def a65 = ideal(co[1,1],u^2-5);
+
+def sch = 1+x5+y5+z5+w5-5xyzw;
+
+def ff0 = x5+y5+z5+w5+t5-5xyzwt;
+def q1 = x+y+z+w+t;
+def q2 = x2+y2+z2+w2+t2+xy+xz+xw+xt+yz+yw+yt+zw+zt+wt;
+def q3 = x3+y3+z3+w3+t3+x2y+x2z+x2w+x2t+y2x+y2z+y2w+y2t+z2x+z2y+z2w+z2t+w2x+w2y+w2z+w2t+t2x+t2y+t2z+t2w;
+
+
+ring R = (5,A,B,C),(p(1..10),r(1..6),s(1..6),w(1..6),q(1..6),v(1..6),u,x,y,z,t,w),lp;
+
+def ella = t^2*(x-w)+2*t*u - x^2 - x*w - w^2;
+def eres = bcsg(ella,ideal(w,t,x,u),x,"r",0);
+def eresr =bcsg(ella,ideal(w,t,x,u),1,"r",0);
+//def eresr= blow_up_raw(ella,
+def eres2 = bcsg(ella,ideal(w-t,x-u),x,"r",0);
+def pge = pg(eresr[2][1]);pg(pge[1][2]+pge[2][2]);
+
+
+ring R = (0,A),(p(1..10),r(1..6),s(1..6),w(1..6),q(1..6),v(1..6),u,x,y,z,t,w),lp; minpoly
+def el = 1 +y3+z3-3yz;
+def ec = ideal(1-yz,y2-z,z2-y);
+def er = bcsg(el,ec,y,"p",0);
+
+
+ideal ers;
+
+ers[1]=y^3-3*y*z+z^3+1;
+ers[2]=p(2)*z^3-p(2)-p(3)*y^2*z-p(3)*y+2*p(3)*z^2;
+ers[3]=p(2)*y-p(2)*z^2+p(3)*y^2-p(3)*z;
+ers[4]=p(2)^2+p(2)*p(3)*y+p(3)^2*z;
+ers[5]=p(1)+p(2)*z^2-p(3)*y^2+2*p(3)*z;
+

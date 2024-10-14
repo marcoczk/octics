@@ -1,0 +1,53 @@
+
+// division(1+x5+y5+z5+w5,1+x+y+z+w)
+def sch = 1+x5+y5+z5+w5-5xyzw;
+def c1 = 1+x+y+z+w;
+def c1a = A+x+y+z+w;
+def dd = division(sch,c1);
+def f4 = dd[1][1,1];
+def f2 = pg(dd[2][1])[2][1][1];
+def f14 = division(sch,f1)[2][1];
+def c2 = x2+y2+z2+w2+1+xy+xz+xw+x+yz+yw+y+zw+z+w;
+ideal ce =(c1,c2);
+def res = bcsr(sch,ce,x,"p");
+def ress = blow_up_raw(sch,ce,x);
+
+
+def sch = 1+x5+y5+z5+w5-5xyzw;
+def cp = ideal(x-1,y-1,z-1,w-1);
+def resp = bcsg(sch,cp,x,"q",0);
+def a4 = resp[2][4];
+def redu4 = a4; redu4[4] = division(a4[4],(w-1)^2)[1][1,1];
+//pg(redu4+ideal(x-1,y-A^2,z-A^2,w-A));
+def cp2 = pg(a2+ideal(x-A,y-A^4,z-1,w-1))[1][1];
+def cp2 = ideal(x-1,y-1,z-A^4,w-A);
+//def resp2 = bcsg(a2,cp2,x,"r",0);
+def respalt = bcsg(sch,ideal(x-A,y-A^4,z-1,w-1),x,"r",0);
+def alt2 = respalt[3][1];
+//pg(respalt[4][1]+ideal(w-1,z-1,y-1,x-1,r(4),r(3)));
+def cealt = ideal(x-1,r(4),r(3),r(2)+(-A^3-A^2-A-1));
+def respalt2 = bcsg(respalt[3][1],cealt,x,"p",0);
+//def aff2 = respalt2[3][2];
+
+
+//ring R = (5,A,B,C),(p(1..10),r(1..6),s(1..6),w(1..6),q(1..6),v(1..6),u,x,y,z,t,w),lp;minpoly=A-1;
+
+def sch = 1+x5+y5+z5+w5-5xyzw;
+def cp = ideal(x-1,y-1,z-1,w-1);
+def resp = bcsg(sch,cp,x-1,"r",0);
+def cp2 = ideal(r(2)+A,r(3),r(4),y-A);
+//elim_all(resp[2][1]+cp2);
+def resp2= bcsg(resp[3][1],cp2,r(3),"q",resp[4][1]);
+
+
+def cs = ideal(x4-yzw,y4-xzw,z4-xyw,w4-xyz,1-xyzw);
+def resps = bcsg(sch,cs,x,"r",0);
+
+def schs = 1+x+y+z+w;
+def css = ideal(x4-yzw,y4-xzw,z4-xyw,w4-xyz);
+def respss = bcsg(schs,cs,x,"r",0);
+
+def scho = x5+y5+z5+w5;
+def co = ideal(x,y,z,w);
+def reso = bcsg(scho,co,x,"r",0);
+def reso2 = bcsg(reso[2][1],co,x,"q",0);
